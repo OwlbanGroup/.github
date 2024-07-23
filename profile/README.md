@@ -21,9 +21,9 @@ Here you will find JPMC open source projects that our developers have incubated 
 
 * Secure your payments, facilitate capital transfers, manage your accounts, or find the answer to your unique challenge with flexible end-to-end solutions to address your evolving needs from J.P. Morgan Payments.
 
-### [Global Technology Careers](https://careers.jpmorgan.com/)
+### [Global Technology Careers](https://www.jpmorganchase.com/careers#tech-careers)
 
-[Global Technology Careers](https://careers.jpmorgan.com/)
-* If you are passionate about open source, join us. Open positions in Global Technology are on our [career site](https://careers.jpmorgan.com/)
+[Global Technology Careers](https://www.jpmorganchase.com/careers#tech-careers)
+* If you are passionate about open source, join us. Open positions in Global Technology are on our [career site](https://www.jpmorganchase.com/careers#tech-careers)
 
 **Open Source @ JPMorgan Chase 2023**
