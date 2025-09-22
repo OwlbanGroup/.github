@@ -1,0 +1,12 @@
+{
+  "name": "dashboard-backend",
+  "version": "1.0.0",
+  "description": "Backend for JPMorgan Dashboard",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
