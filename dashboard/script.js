@@ -309,6 +309,51 @@ function updateAIAnalytics() {
     document.getElementById('aiPredictions').textContent = `Next prediction: ${Math.round(newVal + 5)}`;
 }
 
+// OpenAI Chat Handler
+async function handleOpenAIChat(event) {
+    event.preventDefault();
+    const input = document.getElementById('openaiInput').value.trim();
+    if (!input) return;
+
+    const chatHistory = document.getElementById('chatHistory');
+    chatHistory.innerHTML += `<p><strong>You:</strong> ${input}</p>`;
+    document.getElementById('openaiInput').value = '';
+
+    try {
+        const response = await fetch('/api/ai/openai-chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ messages: [{ role: 'user', content: input }] })
+        });
+        const data = await response.json();
+        chatHistory.innerHTML += `<p><strong>GPT-4:</strong> ${data.response}</p>`;
+    } catch (error) {
+        chatHistory.innerHTML += `<p><strong>Error:</strong> ${error.message}</p>`;
+    }
+}
+
+// OpenAI Image Handler
+async function handleOpenAIImage(event) {
+    event.preventDefault();
+    const input = document.getElementById('openaiImageInput').value.trim();
+    if (!input) return;
+
+    const outputDiv = document.getElementById('openaiImageOutput');
+    outputDiv.innerHTML = 'Generating image...';
+
+    try {
+        const response = await fetch('/api/ai/openai-image', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt: input })
+        });
+        const data = await response.json();
+        outputDiv.innerHTML = `<img src="${data.imageUrl}" alt="Generated Image" style="max-width:100%;">`;
+    } catch (error) {
+        outputDiv.textContent = `Error: ${error.message}`;
+    }
+}
+
 // Initialize charts on page load
 document.addEventListener('DOMContentLoaded', () => {
     createOperationsChart();
@@ -337,6 +382,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const voiceAiForm = document.getElementById('voiceAiForm');
     voiceAiForm.addEventListener('submit', handleVoiceAIInference);
+
+    // OpenAI handlers
+    const openaiChatForm = document.getElementById('openaiChatForm');
+    openaiChatForm.addEventListener('submit', handleOpenAIChat);
+
+    const openaiImageForm = document.getElementById('openaiImageForm');
+    openaiImageForm.addEventListener('submit', handleOpenAIImage);
 
     // Set up real-time updates every 5 seconds
     setInterval(() => {

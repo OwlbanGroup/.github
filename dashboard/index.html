@@ -50,68 +50,87 @@
             <p><strong>Open Source @ JPMorgan Chase 2023</strong></p>
         </section>
         <section id="gpu">
-            <h2>NVIDIA GPU Control Panel</h2>
-            <canvas id="gpuChart"></canvas>
-        </section>
-        <section id="ai">
-            <h2>AI Inference</h2>
-            <form id="aiForm">
-                <label for="aiInput">Enter your query for the advanced AI model:</label>
-                <textarea id="aiInput" name="input" rows="4" cols="50" placeholder="Type your message here..."></textarea>
-                <button type="submit" id="aiSubmit">Run Inference</button>
-            </form>
-            <div id="aiOutput"></div>
-        </section>
-        <section id="blackbox-ai">
-            <h2>Blackbox AI Inference (Grace Blackwell)</h2>
-            <form id="blackboxAiForm">
-                <label for="blackboxAiInput">Enter your query for the Blackbox AI model on NVIDIA Grace Blackwell:</label>
-                <textarea id="blackboxAiInput" name="input" rows="4" cols="50" placeholder="Type your message here..."></textarea>
-                <button type="submit" id="blackboxAiSubmit">Run Blackbox Inference</button>
-            </form>
-            <div id="blackboxAiOutput"></div>
-        </section>
-        <section id="image-generation">
-            <h2>AI Image Generation</h2>
-            <form id="imageGenForm">
-                <label for="imageGenInput">Describe the image you want to generate:</label>
-                <textarea id="imageGenInput" name="input" rows="4" cols="50" placeholder="e.g., A futuristic city with flying cars..."></textarea>
-                <button type="submit" id="imageGenSubmit">Generate Image</button>
-            </form>
-            <div id="imageGenOutput"></div>
-        </section>
-        <section id="code-completion">
-            <h2>AI Code Completion</h2>
-            <form id="codeCompForm">
-                <label for="codeCompInput">Enter code snippet to complete:</label>
-                <textarea id="codeCompInput" name="input" rows="4" cols="50" placeholder="def hello_world():"></textarea>
-                <button type="submit" id="codeCompSubmit">Complete Code</button>
-            </form>
-            <div id="codeCompOutput"></div>
-        </section>
-        <section id="sentiment-analysis">
-            <h2>AI Sentiment Analysis</h2>
-            <form id="sentimentForm">
-                <label for="sentimentInput">Enter text to analyze sentiment:</label>
-                <textarea id="sentimentInput" name="input" rows="4" cols="50" placeholder="I love this product!"></textarea>
-                <button type="submit" id="sentimentSubmit">Analyze Sentiment</button>
-            </form>
-            <div id="sentimentOutput"></div>
-        </section>
-        <section id="voice-input">
-            <h2>Voice Input for AI</h2>
-            <button id="voiceStart">Start Voice Input</button>
-            <div id="voiceOutput"></div>
-            <form id="voiceAiForm" style="display:none;">
-                <textarea id="voiceAiInput" name="input" rows="4" cols="50"></textarea>
-                <button type="submit" id="voiceAiSubmit">Run AI Inference</button>
-            </form>
-            <div id="voiceAiOutput"></div>
-        </section>
-        <section id="ai-analytics">
-            <h2>Real-time AI Analytics</h2>
-            <canvas id="aiAnalyticsChart"></canvas>
-            <div id="aiPredictions"></div>
+            <h2>NVIDIA AI Control Panel</h2>
+            <div class="gpu-metrics">
+                <h3>GPU Metrics</h3>
+                <canvas id="gpuChart"></canvas>
+            </div>
+            <div class="ai-inference">
+                <h3>AI Inference</h3>
+                <form id="aiForm">
+                    <label for="aiInput">Enter your query for the advanced AI model:</label>
+                    <textarea id="aiInput" name="input" rows="4" cols="50" placeholder="Type your message here..."></textarea>
+                    <button type="submit" id="aiSubmit">Run Inference</button>
+                </form>
+                <div id="aiOutput"></div>
+            </div>
+            <div class="blackbox-ai">
+                <h3>Blackbox AI Inference (Grace Blackwell)</h3>
+                <form id="blackboxAiForm">
+                    <label for="blackboxAiInput">Enter your query for the Blackbox AI model on NVIDIA Grace Blackwell:</label>
+                    <textarea id="blackboxAiInput" name="input" rows="4" cols="50" placeholder="Type your message here..."></textarea>
+                    <button type="submit" id="blackboxAiSubmit">Run Blackbox Inference</button>
+                </form>
+                <div id="blackboxAiOutput"></div>
+            </div>
+            <div class="image-generation">
+                <h3>AI Image Generation</h3>
+                <form id="imageGenForm">
+                    <label for="imageGenInput">Describe the image you want to generate:</label>
+                    <textarea id="imageGenInput" name="input" rows="4" cols="50" placeholder="e.g., A futuristic city with flying cars..."></textarea>
+                    <button type="submit" id="imageGenSubmit">Generate Image</button>
+                </form>
+                <div id="imageGenOutput"></div>
+            </div>
+            <div class="code-completion">
+                <h3>AI Code Completion</h3>
+                <form id="codeCompForm">
+                    <label for="codeCompInput">Enter code snippet to complete:</label>
+                    <textarea id="codeCompInput" name="input" rows="4" cols="50" placeholder="def hello_world():"></textarea>
+                    <button type="submit" id="codeCompSubmit">Complete Code</button>
+                </form>
+                <div id="codeCompOutput"></div>
+            </div>
+            <div class="sentiment-analysis">
+                <h3>AI Sentiment Analysis</h3>
+                <form id="sentimentForm">
+                    <label for="sentimentInput">Enter text to analyze sentiment:</label>
+                    <textarea id="sentimentInput" name="input" rows="4" cols="50" placeholder="I love this product!"></textarea>
+                    <button type="submit" id="sentimentSubmit">Analyze Sentiment</button>
+                </form>
+                <div id="sentimentOutput"></div>
+            </div>
+            <div class="voice-input">
+                <h3>Voice Input for AI</h3>
+                <button id="voiceStart">Start Voice Input</button>
+                <div id="voiceOutput"></div>
+                <form id="voiceAiForm" style="display:none;">
+                    <textarea id="voiceAiInput" name="input" rows="4" cols="50"></textarea>
+                    <button type="submit" id="voiceAiSubmit">Run AI Inference</button>
+                </form>
+                <div id="voiceAiOutput"></div>
+            </div>
+            <div class="ai-analytics">
+                <h3>Real-time AI Analytics</h3>
+                <canvas id="aiAnalyticsChart"></canvas>
+                <div id="aiPredictions"></div>
+            </div>
+            <div class="openai-chat">
+                <h3>OpenAI GPT-4 Chat</h3>
+                <div id="chatHistory"></div>
+                <form id="openaiChatForm">
+                    <input type="text" id="openaiInput" placeholder="Ask GPT-4..." required>
+                    <button type="submit">Send</button>
+                </form>
+            </div>
+            <div class="openai-image">
+                <h3>OpenAI DALL-E Image Generation</h3>
+                <form id="openaiImageForm">
+                    <input type="text" id="openaiImageInput" placeholder="Describe the image..." required>
+                    <button type="submit">Generate</button>
+                </form>
+                <div id="openaiImageOutput"></div>
+            </div>
         </section>
     </main>
     <script src="nvidia.js"></script>
