@@ -16,6 +16,7 @@ const { PredictionServiceClient } = require('@google-cloud/aiplatform');
 const AWS = require('aws-sdk');
 const promClient = require('prom-client');
 const Docker = require('dockerode');
+const { FinancialDataManager } = require('./financial-services');
 
 // NVIDIA Cloud Integration
 const nvidiaCloud = {
@@ -94,6 +95,9 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret';
 // In-memory user store (replace with database in production)
 const users = [];
 
+// Initialize Financial Data Manager
+const financialManager = new FinancialDataManager();
+
 // Middleware to verify JWT
 const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
@@ -144,92 +148,264 @@ app.post('/api/auth/login', async (req, res) => {
 // Serve static files from the dashboard directory
 app.use(express.static('dashboard'));
 
-// Endpoint for operations chart data
-app.get('/api/operations', (req, res) => {
-    res.json({
-        labels: ['Americas', 'Europe', 'Asia', 'Africa'],
-        data: [85, 92, 78, 88]
-    });
-});
+// Financial Data Endpoints
 
-// Endpoint for banking chart data
-app.get('/api/banking', (req, res) => {
-    res.json({
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-        data: [100, 120, 110, 130, 125, 140]
-    });
-});
+// Endpoint for stock quotes
+app.get('/api/financial/stock/:symbol', authenticateToken, async (req, res) => {
+    try {
+        const { symbol } = req.params;
+        const { source = 'auto' } = req.query;
 
-// Endpoint for profits and revenue data
-app.get('/api/profits', (req, res) => {
-    // Mock profit data - in production, this would come from your financial systems
-    const currentMonth = new Date().getMonth();
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-    // Generate realistic profit data
-    const revenueData = [];
-    const profitData = [];
-    let baseRevenue = 5000000; // $5M base
-    let baseProfit = 800000;  // $800K base
-
-    for (let i = 0; i < 12; i++) {
-        const seasonalMultiplier = 1 + Math.sin((i / 12) * 2 * Math.PI) * 0.3; // Seasonal variation
-        const growthTrend = 1 + (i * 0.02); // 2% monthly growth
-        const randomVariation = 0.9 + Math.random() * 0.2; // ±10% random variation
-
-        const revenue = Math.round(baseRevenue * seasonalMultiplier * growthTrend * randomVariation);
-        const profit = Math.round(revenue * (0.15 + Math.random() * 0.05)); // 15-20% profit margin
-
-        revenueData.push(revenue);
-        profitData.push(profit);
+        const stockData = await financialManager.getStockQuote(symbol, source);
+        res.json(stockData);
+    } catch (error) {
+        console.error('Error fetching stock data:', error.message);
+        res.status(500).json({ error: 'Failed to fetch stock data', details: error.message });
     }
+});
 
-    // Calculate current metrics
-    const currentRevenue = revenueData[currentMonth];
-    const currentProfit = profitData[currentMonth];
-    const profitMargin = ((currentProfit / currentRevenue) * 100).toFixed(1);
+// Endpoint for financial metrics
+app.get('/api/financial/metrics/:symbol', authenticateToken, async (req, res) => {
+    try {
+        const { symbol } = req.params;
+        const metrics = await financialManager.getFinancialMetrics(symbol);
+        res.json(metrics);
+    } catch (error) {
+        console.error('Error fetching financial metrics:', error.message);
+        res.status(500).json({ error: 'Failed to fetch financial metrics', details: error.message });
+    }
+});
 
-    // Calculate year-over-year changes (mock)
-    const prevYearRevenue = Math.round(currentRevenue * 0.85); // 15% YoY growth
-    const prevYearProfit = Math.round(currentProfit * 0.82); // 18% YoY growth
-    const revenueChange = (((currentRevenue - prevYearRevenue) / prevYearRevenue) * 100).toFixed(1);
-    const profitChange = (((currentProfit - prevYearProfit) / prevYearProfit) * 100).toFixed(1);
+// Endpoint for banking transactions (Plaid integration)
+app.get('/api/financial/banking/transactions', authenticateToken, async (req, res) => {
+    try {
+        const { accessToken, startDate, endDate } = req.query;
 
-    // Calculate ROI (mock calculation)
-    const totalInvestment = 10000000; // $10M total investment
-    const roi = (((currentProfit * 12) / totalInvestment) * 100).toFixed(1);
-
-    res.json({
-        metrics: {
-            totalRevenue: currentRevenue,
-            netProfit: currentProfit,
-            profitMargin: parseFloat(profitMargin),
-            roi: parseFloat(roi),
-            revenueChange: parseFloat(revenueChange),
-            profitChange: parseFloat(profitChange),
-            marginChange: 2.1, // Mock margin improvement
-            roiChange: 5.3 // Mock ROI improvement
-        },
-        charts: {
-            labels: months,
-            revenue: revenueData,
-            profit: profitData
-        },
-        breakdown: {
-            byRegion: [
-                { region: 'Americas', revenue: Math.round(currentRevenue * 0.45), profit: Math.round(currentProfit * 0.48) },
-                { region: 'Europe', revenue: Math.round(currentRevenue * 0.30), profit: Math.round(currentProfit * 0.32) },
-                { region: 'Asia Pacific', revenue: Math.round(currentRevenue * 0.20), profit: Math.round(currentProfit * 0.18) },
-                { region: 'Other', revenue: Math.round(currentRevenue * 0.05), profit: Math.round(currentProfit * 0.02) }
-            ],
-            byProduct: [
-                { product: 'AI Services', revenue: Math.round(currentRevenue * 0.35), profit: Math.round(currentProfit * 0.40) },
-                { product: 'Cloud Computing', revenue: Math.round(currentRevenue * 0.28), profit: Math.round(currentProfit * 0.30) },
-                { product: 'Financial Tech', revenue: Math.round(currentRevenue * 0.22), profit: Math.round(currentProfit * 0.20) },
-                { product: 'Consulting', revenue: Math.round(currentRevenue * 0.15), profit: Math.round(currentProfit * 0.10) }
-            ]
+        if (!accessToken) {
+            return res.status(400).json({ error: 'Access token required' });
         }
-    });
+
+        const transactions = await financialManager.getBankingTransactions(
+            accessToken,
+            startDate || '2024-01-01',
+            endDate || new Date().toISOString().split('T')[0]
+        );
+
+        res.json({ transactions });
+    } catch (error) {
+        console.error('Error fetching banking transactions:', error.message);
+        res.status(500).json({ error: 'Failed to fetch banking transactions', details: error.message });
+    }
+});
+
+// Endpoint for Plaid Link token creation
+app.post('/api/financial/banking/link-token', authenticateToken, async (req, res) => {
+    try {
+        const { userId } = req.body;
+
+        if (!userId) {
+            return res.status(400).json({ error: 'User ID required' });
+        }
+
+        const linkToken = await financialManager.plaid.createLinkToken(userId);
+        res.json({ linkToken: linkToken.link_token });
+    } catch (error) {
+        console.error('Error creating link token:', error.message);
+        res.status(500).json({ error: 'Failed to create link token', details: error.message });
+    }
+});
+
+// Endpoint for Plaid public token exchange
+app.post('/api/financial/banking/exchange-token', authenticateToken, async (req, res) => {
+    try {
+        const { publicToken } = req.body;
+
+        if (!publicToken) {
+            return res.status(400).json({ error: 'Public token required' });
+        }
+
+        const exchangeResponse = await financialManager.plaid.exchangePublicToken(publicToken);
+        res.json({
+            accessToken: exchangeResponse.access_token,
+            itemId: exchangeResponse.item_id
+        });
+    } catch (error) {
+        console.error('Error exchanging public token:', error.message);
+        res.status(500).json({ error: 'Failed to exchange public token', details: error.message });
+    }
+});
+
+// Endpoint for operations chart data (using real financial data)
+app.get('/api/operations', authenticateToken, async (req, res) => {
+    try {
+        // Get stock data for major indices/companies
+        const symbols = ['AAPL', 'MSFT', 'GOOGL', 'AMZN'];
+        const operationsData = [];
+
+        for (const symbol of symbols) {
+            try {
+                const stockData = await financialManager.getStockQuote(symbol);
+                operationsData.push({
+                    symbol: stockData.symbol,
+                    companyName: stockData.companyName || symbol,
+                    currentPrice: stockData.price.current,
+                    change: stockData.price.change,
+                    changePercent: stockData.price.changePercent,
+                    volume: stockData.volume,
+                    marketCap: stockData.marketCap
+                });
+            } catch (error) {
+                console.error(`Error fetching data for ${symbol}:`, error.message);
+                // Continue with other symbols even if one fails
+            }
+        }
+
+        res.json({
+            operations: operationsData,
+            summary: {
+                totalSymbols: operationsData.length,
+                gainers: operationsData.filter(op => op.change > 0).length,
+                losers: operationsData.filter(op => op.change < 0).length,
+                totalVolume: operationsData.reduce((sum, op) => sum + (op.volume || 0), 0),
+                totalMarketCap: operationsData.reduce((sum, op) => sum + (op.marketCap || 0), 0)
+            }
+        });
+    } catch (error) {
+        console.error('Error fetching operations data:', error.message);
+        res.status(500).json({ error: 'Failed to fetch operations data', details: error.message });
+    }
+});
+
+// Endpoint for banking chart data (using real banking metrics)
+app.get('/api/banking', authenticateToken, async (req, res) => {
+    try {
+        // Get financial metrics for banking sector companies
+        const bankingSymbols = ['JPM', 'BAC', 'WFC', 'C'];
+        const bankingData = [];
+
+        for (const symbol of bankingSymbols) {
+            try {
+                const metrics = await financialManager.getFinancialMetrics(symbol);
+                bankingData.push({
+                    symbol: metrics.symbol,
+                    companyName: symbol,
+                    revenue: metrics.metrics.revenue,
+                    netIncome: metrics.metrics.netIncome,
+                    totalAssets: metrics.metrics.totalAssets,
+                    returnOnEquity: metrics.metrics.returnOnEquity,
+                    returnOnAssets: metrics.metrics.returnOnAssets
+                });
+            } catch (error) {
+                console.error(`Error fetching banking data for ${symbol}:`, error.message);
+            }
+        }
+
+        // Calculate sector averages
+        const validData = bankingData.filter(item => item.revenue && item.netIncome);
+        const averages = {
+            avgRevenue: validData.reduce((sum, item) => sum + item.revenue, 0) / validData.length,
+            avgNetIncome: validData.reduce((sum, item) => sum + item.netIncome, 0) / validData.length,
+            avgROE: validData.reduce((sum, item) => sum + item.returnOnEquity, 0) / validData.length,
+            avgROA: validData.reduce((sum, item) => sum + item.returnOnAssets, 0) / validData.length
+        };
+
+        res.json({
+            bankingSector: bankingData,
+            sectorAverages: averages,
+            summary: {
+                totalBanks: bankingData.length,
+                totalAssets: bankingData.reduce((sum, bank) => sum + (bank.totalAssets || 0), 0),
+                totalRevenue: bankingData.reduce((sum, bank) => sum + (bank.revenue || 0), 0),
+                totalNetIncome: bankingData.reduce((sum, bank) => sum + (bank.netIncome || 0), 0)
+            }
+        });
+    } catch (error) {
+        console.error('Error fetching banking data:', error.message);
+        res.status(500).json({ error: 'Failed to fetch banking data', details: error.message });
+    }
+});
+
+// Endpoint for profits and revenue data (using real financial data)
+app.get('/api/profits', authenticateToken, async (req, res) => {
+    try {
+        // Get financial metrics for major tech companies
+        const techSymbols = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'META'];
+        const profitData = [];
+
+        for (const symbol of techSymbols) {
+            try {
+                const metrics = await financialManager.getFinancialMetrics(symbol);
+                profitData.push({
+                    symbol: metrics.symbol,
+                    companyName: symbol,
+                    revenue: metrics.metrics.revenue,
+                    grossProfit: metrics.metrics.grossProfit,
+                    netIncome: metrics.metrics.netIncome,
+                    ebitda: metrics.metrics.ebitda,
+                    eps: metrics.metrics.eps,
+                    profitMargin: (metrics.metrics.netIncome / metrics.metrics.revenue) * 100,
+                    returnOnEquity: metrics.metrics.returnOnEquity,
+                    returnOnAssets: metrics.metrics.returnOnAssets,
+                    freeCashFlow: metrics.metrics.freeCashFlow
+                });
+            } catch (error) {
+                console.error(`Error fetching profit data for ${symbol}:`, error.message);
+            }
+        }
+
+        // Calculate sector totals and averages
+        const validData = profitData.filter(item => item.revenue && item.netIncome);
+        const totals = {
+            totalRevenue: validData.reduce((sum, item) => sum + item.revenue, 0),
+            totalNetIncome: validData.reduce((sum, item) => sum + item.netIncome, 0),
+            totalGrossProfit: validData.reduce((sum, item) => sum + item.grossProfit, 0),
+            totalEBITDA: validData.reduce((sum, item) => sum + item.ebitda, 0),
+            totalFreeCashFlow: validData.reduce((sum, item) => sum + item.freeCashFlow, 0)
+        };
+
+        const averages = {
+            avgProfitMargin: validData.reduce((sum, item) => sum + item.profitMargin, 0) / validData.length,
+            avgROE: validData.reduce((sum, item) => sum + item.returnOnEquity, 0) / validData.length,
+            avgROA: validData.reduce((sum, item) => sum + item.returnOnAssets, 0) / validData.length
+        };
+
+        res.json({
+            companies: profitData,
+            sectorTotals: totals,
+            sectorAverages: averages,
+            summary: {
+                totalCompanies: profitData.length,
+                profitableCompanies: validData.filter(item => item.netIncome > 0).length,
+                totalRevenue: totals.totalRevenue,
+                totalNetIncome: totals.totalNetIncome,
+                overallProfitMargin: (totals.totalNetIncome / totals.totalRevenue) * 100
+            }
+        });
+    } catch (error) {
+        console.error('Error fetching profits data:', error.message);
+        res.status(500).json({ error: 'Failed to fetch profits data', details: error.message });
+    }
+});
+
+// Endpoint for financial provider status
+app.get('/api/financial/status', authenticateToken, (req, res) => {
+    try {
+        const status = financialManager.getProviderStatus();
+        const rateLimitStatus = financialManager.getRateLimitStatus();
+
+        res.json({
+            providers: status,
+            rateLimits: rateLimitStatus,
+            summary: {
+                availableProviders: Object.values(status).filter(p => p.available).length,
+                totalProviders: Object.keys(status).length,
+                totalErrors: Object.values(status).reduce((sum, p) => sum + p.errorCount, 0)
+            }
+        });
+    } catch (error) {
+        console.error('Error fetching provider status:', error.message);
+        res.status(500).json({ error: 'Failed to fetch provider status', details: error.message });
+    }
 });
 
 // Endpoint for GPU metrics data
@@ -643,7 +819,7 @@ app.post('/api/ai/fine-tune', authenticateToken, express.json(), async (req, res
     }
 });
 
-// WebSocket for real-time collaboration
+// WebSocket for real-time collaboration and financial data
 io.on('connection', (socket) => {
     console.log('User connected:', socket.id);
 
@@ -656,7 +832,207 @@ io.on('connection', (socket) => {
         socket.to(data.room).emit('ai-inference', data);
     });
 
+    // Financial data real-time subscriptions
+    socket.on('subscribe-financial', (data) => {
+        const { symbols, updateInterval = 5000 } = data; // 5 second default
+
+        if (!symbols || !Array.isArray(symbols)) {
+            socket.emit('error', { message: 'Symbols array required' });
+            return;
+        }
+
+        console.log(`User ${socket.id} subscribed to financial data for:`, symbols);
+
+        // Send initial data
+        symbols.forEach(async (symbol) => {
+            try {
+                const stockData = await financialManager.getStockQuote(symbol);
+                socket.emit('financial-update', {
+                    symbol: stockData.symbol,
+                    data: stockData,
+                    timestamp: new Date()
+                });
+            } catch (error) {
+                socket.emit('financial-error', {
+                    symbol,
+                    error: error.message
+                });
+            }
+        });
+
+        // Set up real-time updates
+        const intervalId = setInterval(async () => {
+            symbols.forEach(async (symbol) => {
+                try {
+                    const stockData = await financialManager.getStockQuote(symbol);
+                    socket.emit('financial-update', {
+                        symbol: stockData.symbol,
+                        data: stockData,
+                        timestamp: new Date()
+                    });
+                } catch (error) {
+                    socket.emit('financial-error', {
+                        symbol,
+                        error: error.message
+                    });
+                }
+            });
+        }, updateInterval);
+
+        // Store interval for cleanup
+        socket._financialInterval = intervalId;
+
+        socket.on('unsubscribe-financial', () => {
+            if (socket._financialInterval) {
+                clearInterval(socket._financialInterval);
+                delete socket._financialInterval;
+            }
+            console.log(`User ${socket.id} unsubscribed from financial data`);
+        });
+    });
+
+    // Portfolio real-time tracking
+    socket.on('subscribe-portfolio', (data) => {
+        const { portfolioId, updateInterval = 10000 } = data; // 10 second default for portfolio
+
+        if (!portfolioId) {
+            socket.emit('error', { message: 'Portfolio ID required' });
+            return;
+        }
+
+        console.log(`User ${socket.id} subscribed to portfolio:`, portfolioId);
+
+        // Set up portfolio updates
+        const intervalId = setInterval(async () => {
+            try {
+                // Get portfolio data (mock implementation - would come from database)
+                const portfolioData = await getPortfolioData(portfolioId);
+                socket.emit('portfolio-update', {
+                    portfolioId,
+                    data: portfolioData,
+                    timestamp: new Date()
+                });
+            } catch (error) {
+                socket.emit('portfolio-error', {
+                    portfolioId,
+                    error: error.message
+                });
+            }
+        }, updateInterval);
+
+        socket._portfolioInterval = intervalId;
+
+        socket.on('unsubscribe-portfolio', () => {
+            if (socket._portfolioInterval) {
+                clearInterval(socket._portfolioInterval);
+                delete socket._portfolioInterval;
+            }
+            console.log(`User ${socket.id} unsubscribed from portfolio:`, portfolioId);
+        });
+    });
+
+    // Market news real-time updates
+    socket.on('subscribe-news', (data) => {
+        const { categories = [], updateInterval = 30000 } = data; // 30 second default for news
+
+        console.log(`User ${socket.id} subscribed to news categories:`, categories);
+
+        // Set up news updates
+        const intervalId = setInterval(async () => {
+            try {
+                // Get latest market news (mock implementation)
+                const newsData = await getMarketNews(categories);
+                socket.emit('news-update', {
+                    data: newsData,
+                    timestamp: new Date()
+                });
+            } catch (error) {
+                socket.emit('news-error', {
+                    error: error.message
+                });
+            }
+        }, updateInterval);
+
+        socket._newsInterval = intervalId;
+
+        socket.on('unsubscribe-news', () => {
+            if (socket._newsInterval) {
+                clearInterval(socket._newsInterval);
+                delete socket._newsInterval;
+            }
+            console.log(`User ${socket.id} unsubscribed from news`);
+        });
+    });
+
     socket.on('disconnect', () => {
         console.log('User disconnected:', socket.id);
+
+        // Clean up all intervals
+        if (socket._financialInterval) {
+            clearInterval(socket._financialInterval);
+        }
+        if (socket._portfolioInterval) {
+            clearInterval(socket._portfolioInterval);
+        }
+        if (socket._newsInterval) {
+            clearInterval(socket._newsInterval);
+        }
     });
 });
+
+// Helper function to get portfolio data (mock implementation)
+async function getPortfolioData(portfolioId) {
+    // In production, this would fetch from database
+    // For now, return mock portfolio data
+    return {
+        portfolioId,
+        totalValue: 125000.50,
+        totalGainLoss: 2500.75,
+        totalGainLossPercent: 2.04,
+        holdings: [
+            {
+                symbol: 'AAPL',
+                shares: 100,
+                currentPrice: 175.50,
+                marketValue: 17550.00,
+                gainLoss: 500.00,
+                gainLossPercent: 2.93
+            },
+            {
+                symbol: 'MSFT',
+                shares: 50,
+                currentPrice: 378.25,
+                marketValue: 18912.50,
+                gainLoss: 812.50,
+                gainLossPercent: 4.49
+            }
+        ],
+        lastUpdated: new Date()
+    };
+}
+
+// Helper function to get market news (mock implementation)
+async function getMarketNews(categories) {
+    // In production, this would fetch from news API
+    // For now, return mock news data
+    return [
+        {
+            id: 'news-1',
+            title: 'Federal Reserve Signals Potential Rate Cut',
+            summary: 'Fed officials indicate possible interest rate reduction in Q2...',
+            source: 'Financial Times',
+            publishedAt: new Date(),
+            category: 'economics',
+            importance: 'high'
+        },
+        {
+            id: 'news-2',
+            title: 'Tech Stocks Rally on AI Optimism',
+            summary: 'Major tech companies see gains as AI investments show promise...',
+            source: 'Reuters',
+            publishedAt: new Date(Date.now() - 300000), // 5 minutes ago
+            category: 'technology',
+            importance: 'medium'
+        }
+    ];
+}

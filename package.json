@@ -25,7 +25,12 @@
     "openai": "^4.20.1",
     "prom-client": "^15.1.0",
     "redis": "^4.6.11",
-    "socket.io": "^4.7.4"
+    "socket.io": "^4.7.7",
+    "alphavantage": "^2.4.0",
+    "yahoo-finance2": "^2.11.3",
+    "plaid": "^15.4.0",
+    "node-cron": "^3.0.3",
+    "ws": "^8.14.2"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.10.2",
