@@ -354,12 +354,111 @@ async function handleOpenAIImage(event) {
     }
 }
 
+// Function to create Profits Chart
+async function createProfitsChart() {
+    try {
+        const response = await fetch('/api/profits');
+        const data = await response.json();
+        const profitsCtx = document.getElementById('profitsChart').getContext('2d');
+        profitsChart = new Chart(profitsCtx, {
+            type: 'line',
+            data: {
+                labels: data.charts.labels,
+                datasets: [{
+                    label: 'Revenue ($M)',
+                    data: data.charts.revenue.map(val => val / 1000000),
+                    borderColor: 'rgba(40, 167, 69, 1)',
+                    backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                    fill: true,
+                    yAxisID: 'y'
+                }, {
+                    label: 'Profit ($M)',
+                    data: data.charts.profit.map(val => val / 1000000),
+                    borderColor: 'rgba(0, 123, 255, 1)',
+                    backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                    fill: true,
+                    yAxisID: 'y'
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        title: {
+                            display: true,
+                            text: 'Amount ($M)'
+                        }
+                    }
+                }
+            }
+        });
+    } catch (error) {
+        console.error('Error fetching profits data:', error);
+    }
+}
+
+// Function to update profits metrics
+async function updateProfitsMetrics() {
+    try {
+        const response = await fetch('/api/profits');
+        const data = await response.json();
+
+        // Update metric cards
+        document.getElementById('totalRevenue').textContent = `$${(data.metrics.totalRevenue / 1000000).toFixed(1)}M`;
+        document.getElementById('netProfit').textContent = `$${(data.metrics.netProfit / 1000000).toFixed(1)}M`;
+        document.getElementById('profitMargin').textContent = `${data.metrics.profitMargin}%`;
+        document.getElementById('roi').textContent = `${data.metrics.roi}%`;
+
+        // Update change indicators
+        document.getElementById('revenueChange').textContent = `${data.metrics.revenueChange >= 0 ? '+' : ''}${data.metrics.revenueChange}%`;
+        document.getElementById('profitChange').textContent = `${data.metrics.profitChange >= 0 ? '+' : ''}${data.metrics.profitChange}%`;
+        document.getElementById('marginChange').textContent = `${data.metrics.marginChange >= 0 ? '+' : ''}${data.metrics.marginChange}%`;
+        document.getElementById('roiChange').textContent = `${data.metrics.roiChange >= 0 ? '+' : ''}${data.metrics.roiChange}%`;
+
+        // Update change colors
+        document.getElementById('revenueChange').className = `metric-change ${data.metrics.revenueChange >= 0 ? 'positive' : 'negative'}`;
+        document.getElementById('profitChange').className = `metric-change ${data.metrics.profitChange >= 0 ? 'positive' : 'negative'}`;
+        document.getElementById('marginChange').className = `metric-change ${data.metrics.marginChange >= 0 ? 'positive' : 'negative'}`;
+        document.getElementById('roiChange').className = `metric-change ${data.metrics.roiChange >= 0 ? 'positive' : 'negative'}`;
+
+        // Update revenue breakdown
+        const breakdownDiv = document.getElementById('revenueBreakdown');
+        const regionBreakdown = data.breakdown.byRegion.map(item =>
+            `<div class="breakdown-item">
+                <span>${item.region}</span>
+                <span>$${(item.revenue / 1000000).toFixed(1)}M (${((item.revenue / data.metrics.totalRevenue) * 100).toFixed(1)}%)</span>
+            </div>`
+        ).join('');
+
+        const productBreakdown = data.breakdown.byProduct.map(item =>
+            `<div class="breakdown-item">
+                <span>${item.product}</span>
+                <span>$${(item.revenue / 1000000).toFixed(1)}M (${((item.revenue / data.metrics.totalRevenue) * 100).toFixed(1)}%)</span>
+            </div>`
+        ).join('');
+
+        breakdownDiv.innerHTML = `
+            <h4>By Region</h4>
+            ${regionBreakdown}
+            <h4>By Product</h4>
+            ${productBreakdown}
+        `;
+
+    } catch (error) {
+        console.error('Error updating profits metrics:', error);
+    }
+}
+
 // Initialize charts on page load
 document.addEventListener('DOMContentLoaded', () => {
     createOperationsChart();
     createBankingChart();
     createGPUChart();
     createAIAnalyticsChart();
+    createProfitsChart();
+    updateProfitsMetrics();
 
     // Add AI form handlers
     const aiForm = document.getElementById('aiForm');

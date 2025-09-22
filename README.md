@@ -150,6 +150,7 @@ ai-dashboard/
 ### System Endpoints
 - `GET /api/operations` - Operations KPIs
 - `GET /api/banking` - Banking metrics
+- `GET /api/profits` - Revenue & Profits Analytics
 - `GET /api/gpu` - Local NVIDIA GPU metrics
 - `GET /metrics` - Prometheus metrics
 

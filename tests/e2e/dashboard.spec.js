@@ -47,6 +47,33 @@ test.describe('Dashboard E2E Tests', () => {
     expect(chartData).toEqual(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']);
   });
 
+  test('Profits section displays', async ({ page }) => {
+    await page.goto('http://localhost:3000');
+    const profitsSection = page.locator('#profits');
+    await expect(profitsSection).toBeVisible();
+    await expect(profitsSection.locator('h2')).toContainText('Revenue & Profits Analytics');
+  });
+
+  test('Profits metrics display', async ({ page }) => {
+    await page.goto('http://localhost:3000');
+    await expect(page.locator('#totalRevenue')).toBeVisible();
+    await expect(page.locator('#netProfit')).toBeVisible();
+    await expect(page.locator('#profitMargin')).toBeVisible();
+    await expect(page.locator('#roi')).toBeVisible();
+  });
+
+  test('Profits chart renders', async ({ page }) => {
+    await page.goto('http://localhost:3000');
+    const canvas = page.locator('#profitsChart');
+    await expect(canvas).toBeVisible();
+    await page.waitForTimeout(1000);
+    const chartData = await page.evaluate(() => {
+      const chart = Chart.getChart('profitsChart');
+      return chart ? chart.data.datasets.length : 0;
+    });
+    expect(chartData).toBeGreaterThan(0);
+  });
+
   test('Open Source section displays', async ({ page }) => {
     await page.goto('http://localhost:3000');
     const section = page.locator('#opensource');
@@ -314,6 +341,33 @@ test.describe('Dashboard E2E Tests', () => {
     if (serverReady) {
       expect(result.status).toBe(200);
       expect(result.data.labels).toEqual(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']);
+    } else {
+      expect(result.status).toBe(404);
+    }
+  });
+
+  test('Profits API', async ({ page }) => {
+    await page.goto('http://localhost:3000');
+    const result = await page.evaluate(async () => {
+      const response = await fetch('/api/profits');
+      const status = response.status;
+      let data;
+      try {
+        data = await response.json();
+      } catch (e) {
+        data = null;
+      }
+      return { status, data };
+    });
+    if (serverReady) {
+      expect(result.status).toBe(200);
+      expect(result.data).toHaveProperty('metrics');
+      expect(result.data).toHaveProperty('charts');
+      expect(result.data).toHaveProperty('breakdown');
+      expect(result.data.metrics).toHaveProperty('totalRevenue');
+      expect(result.data.metrics).toHaveProperty('netProfit');
+      expect(result.data.metrics).toHaveProperty('profitMargin');
+      expect(result.data.metrics).toHaveProperty('roi');
     } else {
       expect(result.status).toBe(404);
     }

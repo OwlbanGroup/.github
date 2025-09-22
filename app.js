@@ -165,6 +165,78 @@ app.get('/api/banking', (req, res) => {
     });
 });
 
+// Endpoint for profits and revenue data
+app.get('/api/profits', (req, res) => {
+    // Mock profit data - in production, this would come from your financial systems
+    const currentMonth = new Date().getMonth();
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+    // Generate realistic profit data
+    const revenueData = [];
+    const profitData = [];
+    let baseRevenue = 5000000; // $5M base
+    let baseProfit = 800000;  // $800K base
+
+    for (let i = 0; i < 12; i++) {
+        const seasonalMultiplier = 1 + Math.sin((i / 12) * 2 * Math.PI) * 0.3; // Seasonal variation
+        const growthTrend = 1 + (i * 0.02); // 2% monthly growth
+        const randomVariation = 0.9 + Math.random() * 0.2; // ±10% random variation
+
+        const revenue = Math.round(baseRevenue * seasonalMultiplier * growthTrend * randomVariation);
+        const profit = Math.round(revenue * (0.15 + Math.random() * 0.05)); // 15-20% profit margin
+
+        revenueData.push(revenue);
+        profitData.push(profit);
+    }
+
+    // Calculate current metrics
+    const currentRevenue = revenueData[currentMonth];
+    const currentProfit = profitData[currentMonth];
+    const profitMargin = ((currentProfit / currentRevenue) * 100).toFixed(1);
+
+    // Calculate year-over-year changes (mock)
+    const prevYearRevenue = Math.round(currentRevenue * 0.85); // 15% YoY growth
+    const prevYearProfit = Math.round(currentProfit * 0.82); // 18% YoY growth
+    const revenueChange = (((currentRevenue - prevYearRevenue) / prevYearRevenue) * 100).toFixed(1);
+    const profitChange = (((currentProfit - prevYearProfit) / prevYearProfit) * 100).toFixed(1);
+
+    // Calculate ROI (mock calculation)
+    const totalInvestment = 10000000; // $10M total investment
+    const roi = (((currentProfit * 12) / totalInvestment) * 100).toFixed(1);
+
+    res.json({
+        metrics: {
+            totalRevenue: currentRevenue,
+            netProfit: currentProfit,
+            profitMargin: parseFloat(profitMargin),
+            roi: parseFloat(roi),
+            revenueChange: parseFloat(revenueChange),
+            profitChange: parseFloat(profitChange),
+            marginChange: 2.1, // Mock margin improvement
+            roiChange: 5.3 // Mock ROI improvement
+        },
+        charts: {
+            labels: months,
+            revenue: revenueData,
+            profit: profitData
+        },
+        breakdown: {
+            byRegion: [
+                { region: 'Americas', revenue: Math.round(currentRevenue * 0.45), profit: Math.round(currentProfit * 0.48) },
+                { region: 'Europe', revenue: Math.round(currentRevenue * 0.30), profit: Math.round(currentProfit * 0.32) },
+                { region: 'Asia Pacific', revenue: Math.round(currentRevenue * 0.20), profit: Math.round(currentProfit * 0.18) },
+                { region: 'Other', revenue: Math.round(currentRevenue * 0.05), profit: Math.round(currentProfit * 0.02) }
+            ],
+            byProduct: [
+                { product: 'AI Services', revenue: Math.round(currentRevenue * 0.35), profit: Math.round(currentProfit * 0.40) },
+                { product: 'Cloud Computing', revenue: Math.round(currentRevenue * 0.28), profit: Math.round(currentProfit * 0.30) },
+                { product: 'Financial Tech', revenue: Math.round(currentRevenue * 0.22), profit: Math.round(currentProfit * 0.20) },
+                { product: 'Consulting', revenue: Math.round(currentRevenue * 0.15), profit: Math.round(currentProfit * 0.10) }
+            ]
+        }
+    });
+});
+
 // Endpoint for GPU metrics data
 app.get('/api/gpu', (req, res) => {
     exec('nvidia-smi --query-gpu=utilization.gpu,temperature.gpu,memory.used,memory.total --format=csv,noheader,nounits', (error, stdout, stderr) => {

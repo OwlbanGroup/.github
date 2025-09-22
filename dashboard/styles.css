@@ -489,6 +489,222 @@ canvas {
     border-left-color: #4299e1;
 }
 
+/* Profits Section */
+#profits {
+    background-color: #e8f5e8;
+    border-left: 4px solid #28a745;
+}
+
+.profit-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.metric-card {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    text-align: center;
+    transition: transform 0.2s ease;
+}
+
+.metric-card:hover {
+    transform: translateY(-2px);
+}
+
+.metric-card h3 {
+    margin: 0 0 0.5rem 0;
+    color: #005eb8;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.metric-card div {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #28a745;
+    margin-bottom: 0.5rem;
+}
+
+.metric-change {
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+}
+
+.metric-change.positive {
+    color: #28a745;
+    background-color: #d4edda;
+}
+
+.metric-change.negative {
+    color: #dc3545;
+    background-color: #f8d7da;
+}
+
+.profit-breakdown {
+    margin-top: 2rem;
+}
+
+.profit-breakdown h3 {
+    color: #005eb8;
+    margin-bottom: 1rem;
+}
+
+.breakdown-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background: white;
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.breakdown-item span:first-child {
+    font-weight: 600;
+    color: #495057;
+}
+
+.breakdown-item span:last-child {
+    color: #28a745;
+    font-weight: bold;
+}
+
+/* NVIDIA Cloud Section */
+#nvidia-cloud {
+    background-color: #f0f8ff;
+    border-left: 4px solid #007acc;
+}
+
+#nvidia-cloud h3 {
+    color: #007acc;
+    margin-top: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 0.5rem;
+}
+
+#nvidia-cloud form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+#nvidia-cloud input, #nvidia-cloud select {
+    padding: 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-family: inherit;
+    transition: border-color 0.2s ease;
+}
+
+#nvidia-cloud input:focus, #nvidia-cloud select:focus {
+    outline: none;
+    border-color: #007acc;
+    box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.25);
+}
+
+#nvidia-cloud button {
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, #007acc 0%, #005999 100%);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s ease, transform 0.1s ease;
+}
+
+#nvidia-cloud button:hover {
+    background: linear-gradient(135deg, #005999 0%, #004d7a 100%);
+    transform: translateY(-1px);
+}
+
+#nvidia-cloud button:active {
+    transform: translateY(0);
+}
+
+#nvidiaOutput, #nvidiaDeployOutput {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 1rem;
+    min-height: 3rem;
+    white-space: pre-wrap;
+    font-family: monospace;
+    color: #495057;
+}
+
+#nvidiaInstances {
+    background: white;
+    border-radius: 6px;
+    padding: 1rem;
+    margin-top: 1rem;
+}
+
+#nvidiaInstances ul {
+    list-style: none;
+    padding: 0;
+}
+
+#nvidiaInstances li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+#nvidiaInstances li:last-child {
+    border-bottom: none;
+}
+
+/* Dark mode updates */
+.dark-mode #profits {
+    background-color: #2d3748;
+    border-left-color: #48bb78;
+}
+
+.dark-mode .metric-card {
+    background-color: #1a202c;
+    color: #e9ecef;
+}
+
+.dark-mode .metric-card h3 {
+    color: #63b3ed;
+}
+
+.dark-mode .metric-card div {
+    color: #48bb78;
+}
+
+.dark-mode .breakdown-item {
+    background-color: #1a202c;
+    color: #e9ecef;
+}
+
+.dark-mode .breakdown-item span:first-child {
+    color: #a0aec0;
+}
+
+.dark-mode .breakdown-item span:last-child {
+    color: #48bb78;
+}
+
+.dark-mode #nvidia-cloud {
+    background-color: #2d3748;
+    border-left-color: #4299e1;
+}
+
+.dark-mode #nvidia-cloud h3 {
+    color: #63b3ed;
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
     header h1 {
@@ -510,5 +726,23 @@ canvas {
 
     #ai textarea {
         min-height: 100px;
+    }
+
+    .profit-metrics {
+        grid-template-columns: 1fr;
+    }
+
+    .metric-card {
+        padding: 1rem;
+    }
+
+    .metric-card div {
+        font-size: 1.5rem;
+    }
+
+    .breakdown-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
     }
 }
