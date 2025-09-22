@@ -100,16 +100,16 @@
         - button "Start Voice Input" [ref=e103] [cursor=pointer]
       - generic [ref=e106]:
         - heading "Real-time AI Analytics" [level=3] [ref=e107]
-        - generic [ref=e109]: "Next prediction: 154"
+        - generic [ref=e109]: "Next prediction: 151"
       - generic [ref=e110]:
         - heading "OpenAI GPT-4 Chat" [level=3] [ref=e111]
         - generic [ref=e112]:
-          - textbox "Ask GPT-4..." [ref=e113]: Hello GPT
+          - textbox "Ask GPT-4..." [ref=e113]
           - button "Send" [ref=e114]
       - generic [ref=e115]:
         - heading "OpenAI DALL-E Image Generation" [level=3] [ref=e116]
         - generic [ref=e117]:
-          - textbox "Describe the image..." [ref=e118]
+          - textbox "Describe the image..." [ref=e118]: A beautiful sunset over mountains
           - button "Generate" [ref=e119]
     - generic [ref=e120]:
       - heading "NVIDIA Cloud AI Control Panel" [level=2] [ref=e121]

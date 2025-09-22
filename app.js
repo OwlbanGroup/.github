@@ -56,14 +56,9 @@ function findAvailablePort(startPort) {
     });
 }
 
-let port;
-findAvailablePort(3000).then(availablePort => {
-    port = availablePort;
-    app.listen(port, () => {
-        console.log(`Server running at http://localhost:${port}`);
-    });
-}).catch(err => {
-    console.error('No available ports found:', err);
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`);
 });
 
 // Middleware

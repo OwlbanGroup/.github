@@ -87,13 +87,45 @@ A comprehensive, enterprise-grade AI dashboard integrating multiple AI platforms
 npm run dev
 ```
 
-#### Production Mode
+#### Production Mode (Standard)
 ```bash
 # Windows PowerShell
 .\start-production.ps1
 
 # Linux/macOS
 ./start-production.sh
+```
+
+#### Production Mode (Enhanced)
+For advanced production deployments with health checks, backups, and monitoring:
+```bash
+# Windows PowerShell
+.\start-production-enhanced.ps1
+
+# Linux/macOS
+./start-production-enhanced.sh
+```
+
+**Enhanced Production Features:**
+- ✅ Automatic health checks and startup validation
+- ✅ Environment and dependency verification
+- ✅ Automatic backups before deployment
+- ✅ Port conflict detection and resolution
+- ✅ PM2 ecosystem configuration
+- ✅ Comprehensive logging and monitoring
+- ✅ Old backup cleanup
+- ✅ Optional PM2 auto-startup setup
+
+**Enhanced Production Options:**
+```bash
+# Create backup only
+./start-production-enhanced.sh --backup
+
+# Cleanup old backups
+./start-production-enhanced.sh --cleanup
+
+# Setup auto-startup on boot
+./start-production-enhanced.sh --setup-startup
 ```
 
 The application will be available at `http://localhost:3000`
@@ -104,13 +136,20 @@ The application will be available at `http://localhost:3000`
 ai-dashboard/
 ├── app.js                    # Main Express server
 ├── package.json              # Dependencies and scripts
-├── start-production.sh       # Linux/macOS production script
-├── start-production.ps1      # Windows production script
+├── ecosystem.config.js       # PM2 process configuration
+├── start-production.sh       # Standard Linux/macOS production script
+├── start-production.ps1      # Standard Windows production script
+├── start-production-enhanced.sh    # Enhanced Linux/macOS production script
+├── start-production-enhanced.ps1   # Enhanced Windows production script
 ├── start-development.ps1     # Windows development script
 ├── Dockerfile                # Docker containerization
 ├── docker-compose.yml        # Local development with Docker
 ├── k8s/                      # Kubernetes deployment
 │   └── deployment.yaml
+├── logs/                     # Application logs directory
+├── backups/                  # Automatic backup storage
+├── tests/                    # Test suite
+│   └── e2e/                  # End-to-end tests
 ├── .github/workflows/        # CI/CD pipelines
 │   └── ci-cd.yml
 └── dashboard/                # Frontend assets

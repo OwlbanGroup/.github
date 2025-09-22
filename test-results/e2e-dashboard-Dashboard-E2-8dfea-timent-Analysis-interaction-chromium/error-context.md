@@ -70,7 +70,7 @@
         - generic [ref=e68]:
           - generic [ref=e69]: "Enter your query for the advanced AI model:"
           - textbox "Enter your query for the advanced AI model:" [ref=e70]
-          - button "Run Inference" [active] [ref=e71]
+          - button "Run Inference" [ref=e71]
       - generic [ref=e73]:
         - heading "Blackbox AI Inference (Grace Blackwell)" [level=3] [ref=e74]
         - generic [ref=e75]:
@@ -93,52 +93,51 @@
         - heading "AI Sentiment Analysis" [level=3] [ref=e95]
         - generic [ref=e96]:
           - generic [ref=e97]: "Enter text to analyze sentiment:"
-          - textbox "Enter text to analyze sentiment:" [ref=e98]
-          - button "Analyze Sentiment" [ref=e99]
+          - textbox "Enter text to analyze sentiment:" [ref=e98]: I love this amazing product!
+          - button "Analyze Sentiment" [active] [ref=e99]
+        - generic [ref=e100]: "Error: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON"
       - generic [ref=e101]:
         - heading "Voice Input for AI" [level=3] [ref=e102]
         - button "Start Voice Input" [ref=e103] [cursor=pointer]
-      - generic [ref=e106]:
-        - heading "Real-time AI Analytics" [level=3] [ref=e107]
-        - generic [ref=e109]: "Next prediction: 154"
-      - generic [ref=e110]:
-        - heading "OpenAI GPT-4 Chat" [level=3] [ref=e111]
-        - generic [ref=e112]:
-          - textbox "Ask GPT-4..." [ref=e113]: Hello GPT
-          - button "Send" [ref=e114]
-      - generic [ref=e115]:
-        - heading "OpenAI DALL-E Image Generation" [level=3] [ref=e116]
-        - generic [ref=e117]:
-          - textbox "Describe the image..." [ref=e118]
-          - button "Generate" [ref=e119]
-    - generic [ref=e120]:
-      - heading "NVIDIA Cloud AI Control Panel" [level=2] [ref=e121]
-      - generic [ref=e122]:
-        - heading "Available Models" [level=3] [ref=e123]
-        - combobox [ref=e124]:
+      - heading "Real-time AI Analytics" [level=3] [ref=e107]
+      - generic [ref=e109]:
+        - heading "OpenAI GPT-4 Chat" [level=3] [ref=e110]
+        - generic [ref=e111]:
+          - textbox "Ask GPT-4..." [ref=e112]
+          - button "Send" [ref=e113]
+      - generic [ref=e114]:
+        - heading "OpenAI DALL-E Image Generation" [level=3] [ref=e115]
+        - generic [ref=e116]:
+          - textbox "Describe the image..." [ref=e117]
+          - button "Generate" [ref=e118]
+    - generic [ref=e119]:
+      - heading "NVIDIA Cloud AI Control Panel" [level=2] [ref=e120]
+      - generic [ref=e121]:
+        - heading "Available Models" [level=3] [ref=e122]
+        - combobox [ref=e123]:
           - option "Select a model..." [selected]
-        - button "Load Models" [ref=e125] [cursor=pointer]
-      - generic [ref=e126]:
-        - heading "AI Inference" [level=3] [ref=e127]
-        - generic [ref=e128]:
-          - textbox "Enter your prompt..." [ref=e129]
-          - button "Run Inference" [ref=e130] [cursor=pointer]
-      - generic [ref=e132]:
-        - heading "Cloud Instances" [level=3] [ref=e133]
-        - paragraph [ref=e135]: Error loading instances
-      - generic [ref=e136]:
-        - heading "Model Deployment" [level=3] [ref=e137]
-        - generic [ref=e138]:
-          - textbox "Model ID" [ref=e139]
-          - textbox "Instance Type" [ref=e140]
-          - textbox "Deployment Name" [ref=e141]
-          - button "Deploy Model" [ref=e142] [cursor=pointer]
-    - generic [ref=e144]:
-      - heading "Collaborative AI Sessions" [level=2] [ref=e145]
-      - textbox "Enter session ID" [ref=e146]
-      - button "Join/Create Session" [ref=e147]
-      - generic [ref=e148]:
-        - textbox "Share your AI prompt or idea..." [ref=e149]
-        - button "Share" [ref=e150]
-  - button "Toggle Dark Mode" [ref=e151]
+        - button "Load Models" [ref=e124] [cursor=pointer]
+      - generic [ref=e125]:
+        - heading "AI Inference" [level=3] [ref=e126]
+        - generic [ref=e127]:
+          - textbox "Enter your prompt..." [ref=e128]
+          - button "Run Inference" [ref=e129] [cursor=pointer]
+      - generic [ref=e131]:
+        - heading "Cloud Instances" [level=3] [ref=e132]
+        - paragraph [ref=e134]: Error loading instances
+      - generic [ref=e135]:
+        - heading "Model Deployment" [level=3] [ref=e136]
+        - generic [ref=e137]:
+          - textbox "Model ID" [ref=e138]
+          - textbox "Instance Type" [ref=e139]
+          - textbox "Deployment Name" [ref=e140]
+          - button "Deploy Model" [ref=e141] [cursor=pointer]
+    - generic [ref=e143]:
+      - heading "Collaborative AI Sessions" [level=2] [ref=e144]
+      - textbox "Enter session ID" [ref=e145]
+      - button "Join/Create Session" [ref=e146]
+      - generic [ref=e147]:
+        - textbox "Share your AI prompt or idea..." [ref=e148]
+        - button "Share" [ref=e149]
+  - button "Toggle Dark Mode" [ref=e150]
 ```

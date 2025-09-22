@@ -1,7 +1,7 @@
 # Page snapshot
 
 ```yaml
-- generic [ref=e1]:
+- generic [active] [ref=e1]:
   - banner [ref=e2]:
     - heading "Owlban Group Dashboard" [level=1] [ref=e3]
   - main [ref=e4]:
@@ -70,7 +70,7 @@
         - generic [ref=e68]:
           - generic [ref=e69]: "Enter your query for the advanced AI model:"
           - textbox "Enter your query for the advanced AI model:" [ref=e70]
-          - button "Run Inference" [active] [ref=e71]
+          - button "Run Inference" [ref=e71]
       - generic [ref=e73]:
         - heading "Blackbox AI Inference (Grace Blackwell)" [level=3] [ref=e74]
         - generic [ref=e75]:
@@ -100,11 +100,11 @@
         - button "Start Voice Input" [ref=e103] [cursor=pointer]
       - generic [ref=e106]:
         - heading "Real-time AI Analytics" [level=3] [ref=e107]
-        - generic [ref=e109]: "Next prediction: 154"
+        - generic [ref=e109]: "Next prediction: 144"
       - generic [ref=e110]:
         - heading "OpenAI GPT-4 Chat" [level=3] [ref=e111]
         - generic [ref=e112]:
-          - textbox "Ask GPT-4..." [ref=e113]: Hello GPT
+          - textbox "Ask GPT-4..." [ref=e113]
           - button "Send" [ref=e114]
       - generic [ref=e115]:
         - heading "OpenAI DALL-E Image Generation" [level=3] [ref=e116]

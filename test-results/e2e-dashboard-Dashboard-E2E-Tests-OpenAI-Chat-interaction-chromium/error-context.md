@@ -8,95 +8,137 @@
     - heading "Global Operations KPIs" [level=2] [ref=e6]
     - heading "Global Banking Metrics" [level=2] [ref=e9]
     - generic [ref=e11]:
-      - heading "Open Source @ J.P. Morgan" [level=2] [ref=e12]
-      - heading "Welcome to Open Source @ J.P. Morgan Payments!" [level=3] [ref=e13]
-      - paragraph [ref=e14]: Here you will find JPMC open source projects that our developers have incubated and brought to the open source community.
-      - heading "What we do" [level=4] [ref=e15]
-      - list [ref=e16]:
-        - listitem [ref=e17]: JPMC has a long history of building successful open source projects, forging open standards, and contributing to the open source community at large.
-      - heading "How to contribute" [level=4] [ref=e18]
-      - list [ref=e19]:
-        - listitem [ref=e20]:
+      - heading "Revenue & Profits Analytics" [level=2] [ref=e12]
+      - generic [ref=e13]:
+        - generic [ref=e14]:
+          - heading "Total Revenue" [level=3] [ref=e15]
+          - generic [ref=e16]: $0
+          - generic [ref=e17]: +0%
+        - generic [ref=e18]:
+          - heading "Net Profit" [level=3] [ref=e19]
+          - generic [ref=e20]: $0
+          - generic [ref=e21]: +0%
+        - generic [ref=e22]:
+          - heading "Profit Margin" [level=3] [ref=e23]
+          - generic [ref=e24]: 0%
+          - generic [ref=e25]: +0%
+        - generic [ref=e26]:
+          - heading "ROI" [level=3] [ref=e27]
+          - generic [ref=e28]: 0%
+          - generic [ref=e29]: +0%
+      - heading "Revenue Breakdown" [level=3] [ref=e32]
+    - generic [ref=e33]:
+      - heading "Open Source @ J.P. Morgan" [level=2] [ref=e34]
+      - heading "Welcome to Open Source @ J.P. Morgan Payments!" [level=3] [ref=e35]
+      - paragraph [ref=e36]: Here you will find JPMC open source projects that our developers have incubated and brought to the open source community.
+      - heading "What we do" [level=4] [ref=e37]
+      - list [ref=e38]:
+        - listitem [ref=e39]: JPMC has a long history of building successful open source projects, forging open standards, and contributing to the open source community at large.
+      - heading "How to contribute" [level=4] [ref=e40]
+      - list [ref=e41]:
+        - listitem [ref=e42]:
           - text: Refer to our
-          - link "CONTRIBUTE.md" [ref=e21] [cursor=pointer]:
+          - link "CONTRIBUTE.md" [ref=e43] [cursor=pointer]:
             - /url: https://github.com/jpmorganchase/.github/blob/main/CONTRIBUTING.md
           - text: for how to contribute
-      - heading "Follow us" [level=4] [ref=e22]
-      - list [ref=e23]:
-        - listitem [ref=e24]: Our GitHub hosts our current JPMC sponsored projects. We have an active pipeline of projects that we are bringing to the community.
-        - listitem [ref=e25]: Follow us to stay informed.
-      - heading "Technology @ J.P. Morgan Payments" [level=4] [ref=e26]
-      - paragraph [ref=e27]:
-        - link "https://developer.payments.jpmorgan.com/" [ref=e28] [cursor=pointer]:
+      - heading "Follow us" [level=4] [ref=e44]
+      - list [ref=e45]:
+        - listitem [ref=e46]: Our GitHub hosts our current JPMC sponsored projects. We have an active pipeline of projects that we are bringing to the community.
+        - listitem [ref=e47]: Follow us to stay informed.
+      - heading "Technology @ J.P. Morgan Payments" [level=4] [ref=e48]
+      - paragraph [ref=e49]:
+        - link "https://developer.payments.jpmorgan.com/" [ref=e50] [cursor=pointer]:
           - /url: https://developer.payments.jpmorgan.com/
-      - list [ref=e29]:
-        - listitem [ref=e30]: Secure your payments, facilitate capital transfers, manage your accounts, or find the answer to your unique challenge with flexible end-to-end solutions to address your evolving needs from J.P. Morgan Payments.
-      - heading "Global Technology Careers" [level=4] [ref=e31]
-      - paragraph [ref=e32]:
-        - link "Global Technology Careers" [ref=e33] [cursor=pointer]:
+      - list [ref=e51]:
+        - listitem [ref=e52]: Secure your payments, facilitate capital transfers, manage your accounts, or find the answer to your unique challenge with flexible end-to-end solutions to address your evolving needs from J.P. Morgan Payments.
+      - heading "Global Technology Careers" [level=4] [ref=e53]
+      - paragraph [ref=e54]:
+        - link "Global Technology Careers" [ref=e55] [cursor=pointer]:
           - /url: https://www.jpmorganchase.com/careers#tech-careers
-      - list [ref=e34]:
-        - listitem [ref=e35]:
+      - list [ref=e56]:
+        - listitem [ref=e57]:
           - text: If you are passionate about open source, join us. Open positions in Global Technology are on our
-          - link "career site" [ref=e36] [cursor=pointer]:
+          - link "career site" [ref=e58] [cursor=pointer]:
             - /url: https://www.jpmorganchase.com/careers#tech-careers
-      - paragraph [ref=e37]:
-        - strong [ref=e38]: Open Source @ JPMorgan Chase 2023
-    - generic [ref=e39]:
-      - heading "NVIDIA AI Control Panel" [level=2] [ref=e40]
-      - heading "GPU Metrics" [level=3] [ref=e42]
-      - generic [ref=e44]:
-        - heading "AI Inference" [level=3] [ref=e45]
-        - generic [ref=e46]:
-          - generic [ref=e47]: "Enter your query for the advanced AI model:"
-          - textbox "Enter your query for the advanced AI model:" [ref=e48]
-          - button "Run Inference" [active] [ref=e49]
-      - generic [ref=e51]:
-        - heading "Blackbox AI Inference (Grace Blackwell)" [level=3] [ref=e52]
-        - generic [ref=e53]:
-          - generic [ref=e54]: "Enter your query for the Blackbox AI model on NVIDIA Grace Blackwell:"
-          - textbox "Enter your query for the Blackbox AI model on NVIDIA Grace Blackwell:" [ref=e55]
-          - button "Run Blackbox Inference" [ref=e56]
-      - generic [ref=e58]:
-        - heading "AI Image Generation" [level=3] [ref=e59]
-        - generic [ref=e60]:
-          - generic [ref=e61]: "Describe the image you want to generate:"
-          - textbox "Describe the image you want to generate:" [ref=e62]
-          - button "Generate Image" [ref=e63]
-      - generic [ref=e65]:
-        - heading "AI Code Completion" [level=3] [ref=e66]
-        - generic [ref=e67]:
-          - generic [ref=e68]: "Enter code snippet to complete:"
-          - textbox "Enter code snippet to complete:" [ref=e69]
-          - button "Complete Code" [ref=e70]
-      - generic [ref=e72]:
-        - heading "AI Sentiment Analysis" [level=3] [ref=e73]
-        - generic [ref=e74]:
-          - generic [ref=e75]: "Enter text to analyze sentiment:"
-          - textbox "Enter text to analyze sentiment:" [ref=e76]
-          - button "Analyze Sentiment" [ref=e77]
-      - generic [ref=e79]:
-        - heading "Voice Input for AI" [level=3] [ref=e80]
-        - button "Start Voice Input" [ref=e81] [cursor=pointer]
-      - generic [ref=e84]:
-        - heading "Real-time AI Analytics" [level=3] [ref=e85]
-        - generic [ref=e87]: "Next prediction: 144"
-      - generic [ref=e88]:
-        - heading "OpenAI GPT-4 Chat" [level=3] [ref=e89]
-        - generic [ref=e90]:
-          - textbox "Ask GPT-4..." [ref=e91]: Hello GPT
-          - button "Send" [ref=e92]
-      - generic [ref=e93]:
-        - heading "OpenAI DALL-E Image Generation" [level=3] [ref=e94]
-        - generic [ref=e95]:
-          - textbox "Describe the image..." [ref=e96]
-          - button "Generate" [ref=e97]
-    - generic [ref=e98]:
-      - heading "Collaborative AI Sessions" [level=2] [ref=e99]
-      - textbox "Enter session ID" [ref=e100]
-      - button "Join/Create Session" [ref=e101]
-      - generic [ref=e102]:
-        - textbox "Share your AI prompt or idea..." [ref=e103]
-        - button "Share" [ref=e104]
-  - button "Toggle Dark Mode" [ref=e105]
+      - paragraph [ref=e59]:
+        - strong [ref=e60]: Open Source @ JPMorgan Chase 2023
+    - generic [ref=e61]:
+      - heading "NVIDIA AI Control Panel" [level=2] [ref=e62]
+      - heading "GPU Metrics" [level=3] [ref=e64]
+      - generic [ref=e66]:
+        - heading "AI Inference" [level=3] [ref=e67]
+        - generic [ref=e68]:
+          - generic [ref=e69]: "Enter your query for the advanced AI model:"
+          - textbox "Enter your query for the advanced AI model:" [ref=e70]
+          - button "Run Inference" [active] [ref=e71]
+      - generic [ref=e73]:
+        - heading "Blackbox AI Inference (Grace Blackwell)" [level=3] [ref=e74]
+        - generic [ref=e75]:
+          - generic [ref=e76]: "Enter your query for the Blackbox AI model on NVIDIA Grace Blackwell:"
+          - textbox "Enter your query for the Blackbox AI model on NVIDIA Grace Blackwell:" [ref=e77]
+          - button "Run Blackbox Inference" [ref=e78]
+      - generic [ref=e80]:
+        - heading "AI Image Generation" [level=3] [ref=e81]
+        - generic [ref=e82]:
+          - generic [ref=e83]: "Describe the image you want to generate:"
+          - textbox "Describe the image you want to generate:" [ref=e84]
+          - button "Generate Image" [ref=e85]
+      - generic [ref=e87]:
+        - heading "AI Code Completion" [level=3] [ref=e88]
+        - generic [ref=e89]:
+          - generic [ref=e90]: "Enter code snippet to complete:"
+          - textbox "Enter code snippet to complete:" [ref=e91]
+          - button "Complete Code" [ref=e92]
+      - generic [ref=e94]:
+        - heading "AI Sentiment Analysis" [level=3] [ref=e95]
+        - generic [ref=e96]:
+          - generic [ref=e97]: "Enter text to analyze sentiment:"
+          - textbox "Enter text to analyze sentiment:" [ref=e98]
+          - button "Analyze Sentiment" [ref=e99]
+      - generic [ref=e101]:
+        - heading "Voice Input for AI" [level=3] [ref=e102]
+        - button "Start Voice Input" [ref=e103] [cursor=pointer]
+      - generic [ref=e106]:
+        - heading "Real-time AI Analytics" [level=3] [ref=e107]
+        - generic [ref=e109]: "Next prediction: 144"
+      - generic [ref=e110]:
+        - heading "OpenAI GPT-4 Chat" [level=3] [ref=e111]
+        - generic [ref=e112]:
+          - textbox "Ask GPT-4..." [ref=e113]: Hello GPT
+          - button "Send" [ref=e114]
+      - generic [ref=e115]:
+        - heading "OpenAI DALL-E Image Generation" [level=3] [ref=e116]
+        - generic [ref=e117]:
+          - textbox "Describe the image..." [ref=e118]
+          - button "Generate" [ref=e119]
+    - generic [ref=e120]:
+      - heading "NVIDIA Cloud AI Control Panel" [level=2] [ref=e121]
+      - generic [ref=e122]:
+        - heading "Available Models" [level=3] [ref=e123]
+        - combobox [ref=e124]:
+          - option "Select a model..." [selected]
+        - button "Load Models" [ref=e125] [cursor=pointer]
+      - generic [ref=e126]:
+        - heading "AI Inference" [level=3] [ref=e127]
+        - generic [ref=e128]:
+          - textbox "Enter your prompt..." [ref=e129]
+          - button "Run Inference" [ref=e130] [cursor=pointer]
+      - generic [ref=e132]:
+        - heading "Cloud Instances" [level=3] [ref=e133]
+        - paragraph [ref=e135]: Error loading instances
+      - generic [ref=e136]:
+        - heading "Model Deployment" [level=3] [ref=e137]
+        - generic [ref=e138]:
+          - textbox "Model ID" [ref=e139]
+          - textbox "Instance Type" [ref=e140]
+          - textbox "Deployment Name" [ref=e141]
+          - button "Deploy Model" [ref=e142] [cursor=pointer]
+    - generic [ref=e144]:
+      - heading "Collaborative AI Sessions" [level=2] [ref=e145]
+      - textbox "Enter session ID" [ref=e146]
+      - button "Join/Create Session" [ref=e147]
+      - generic [ref=e148]:
+        - textbox "Share your AI prompt or idea..." [ref=e149]
+        - button "Share" [ref=e150]
+  - button "Toggle Dark Mode" [ref=e151]
 ```
