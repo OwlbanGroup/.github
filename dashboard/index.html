@@ -53,6 +53,24 @@
             <h2>NVIDIA GPU Control Panel</h2>
             <canvas id="gpuChart"></canvas>
         </section>
+        <section id="ai">
+            <h2>AI Inference</h2>
+            <form id="aiForm">
+                <label for="aiInput">Enter your query for the advanced AI model:</label>
+                <textarea id="aiInput" name="input" rows="4" cols="50" placeholder="Type your message here..."></textarea>
+                <button type="submit" id="aiSubmit">Run Inference</button>
+            </form>
+            <div id="aiOutput"></div>
+        </section>
+        <section id="blackbox-ai">
+            <h2>Blackbox AI Inference (Grace Blackwell)</h2>
+            <form id="blackboxAiForm">
+                <label for="blackboxAiInput">Enter your query for the Blackbox AI model on NVIDIA Grace Blackwell:</label>
+                <textarea id="blackboxAiInput" name="input" rows="4" cols="50" placeholder="Type your message here..."></textarea>
+                <button type="submit" id="blackboxAiSubmit">Run Blackbox Inference</button>
+            </form>
+            <div id="blackboxAiOutput"></div>
+        </section>
     </main>
     <script src="nvidia.js"></script>
     <script src="script.js"></script>

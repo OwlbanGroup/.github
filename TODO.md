@@ -1,11 +1,9 @@
-# TODO: Combine JPMorgan and NVIDIA Dashboard Control Panel into Owlban Group Project
+# TODO: Enhance Owlban Group Dashboard for Advanced AI Model
 
-- [x] Copy nvidia.js from FOUR-ERA-AI to the current project
-- [x] Update dashboard/index.html: Add script tag for nvidia.js
-- [x] Update dashboard/index.html: Add new section for NVIDIA GPU metrics
-- [x] Update dashboard/script.js: Import nvidiaIntegration and add function to create GPU chart
-- [x] Update dashboard/styles.css: Adjust styles for new section if needed
-- [x] Update package.json: Add any necessary dependencies (none for now)
-- [x] Update app.js: Ensure static serving includes nvidia.js if placed in dashboard
-- [x] Test: Run server and verify GPU metrics display in browser
-- [x] Update title to "Owlban Group Dashboard" or similar
+- [x] Add `/api/gpu` endpoint in `app.js` to execute `nvidia-smi` and parse real GPU metrics (utilization, temperature, memory)
+- [x] Update `dashboard/nvidia.js`: Modify `getGPUMetrics` to fetch data from `/api/gpu` instead of mock
+- [x] Update `dashboard/index.html`: Add new section for AI Inference with input form and output display
+- [x] Update `dashboard/script.js`: Add form submission handler for AI inference, display responses, and implement real-time chart updates every 5 seconds
+- [x] Update `dashboard/styles.css`: Enhance styling with modern design, responsiveness, and TailwindCSS integration
+- [ ] Test: Run `npm start`, verify real GPU metrics, AI inference UI, real-time updates, and overall functionality
+- [x] Add Blackbox AI section to the dashboard for Grace Blackwell NVIDIA model inference
