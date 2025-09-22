@@ -71,8 +71,51 @@
             </form>
             <div id="blackboxAiOutput"></div>
         </section>
+        <section id="image-generation">
+            <h2>AI Image Generation</h2>
+            <form id="imageGenForm">
+                <label for="imageGenInput">Describe the image you want to generate:</label>
+                <textarea id="imageGenInput" name="input" rows="4" cols="50" placeholder="e.g., A futuristic city with flying cars..."></textarea>
+                <button type="submit" id="imageGenSubmit">Generate Image</button>
+            </form>
+            <div id="imageGenOutput"></div>
+        </section>
+        <section id="code-completion">
+            <h2>AI Code Completion</h2>
+            <form id="codeCompForm">
+                <label for="codeCompInput">Enter code snippet to complete:</label>
+                <textarea id="codeCompInput" name="input" rows="4" cols="50" placeholder="def hello_world():"></textarea>
+                <button type="submit" id="codeCompSubmit">Complete Code</button>
+            </form>
+            <div id="codeCompOutput"></div>
+        </section>
+        <section id="sentiment-analysis">
+            <h2>AI Sentiment Analysis</h2>
+            <form id="sentimentForm">
+                <label for="sentimentInput">Enter text to analyze sentiment:</label>
+                <textarea id="sentimentInput" name="input" rows="4" cols="50" placeholder="I love this product!"></textarea>
+                <button type="submit" id="sentimentSubmit">Analyze Sentiment</button>
+            </form>
+            <div id="sentimentOutput"></div>
+        </section>
+        <section id="voice-input">
+            <h2>Voice Input for AI</h2>
+            <button id="voiceStart">Start Voice Input</button>
+            <div id="voiceOutput"></div>
+            <form id="voiceAiForm" style="display:none;">
+                <textarea id="voiceAiInput" name="input" rows="4" cols="50"></textarea>
+                <button type="submit" id="voiceAiSubmit">Run AI Inference</button>
+            </form>
+            <div id="voiceAiOutput"></div>
+        </section>
+        <section id="ai-analytics">
+            <h2>Real-time AI Analytics</h2>
+            <canvas id="aiAnalyticsChart"></canvas>
+            <div id="aiPredictions"></div>
+        </section>
     </main>
     <script src="nvidia.js"></script>
     <script src="script.js"></script>
+    <script src="collaboration.js"></script>
 </body>
 </html>

@@ -59,41 +59,37 @@ class NVIDIAIntegration {
 
     async runAIInference(modelId, inputData) {
         try {
-            // Since API key is placeholder, return mock response
-            if (this.apiKey === 'YOUR_NVIDIA_API_KEY') {
-                // Simulate processing time
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                let mockResponse;
-                if (modelId === 'blackbox-ai') {
-                    mockResponse = `Mock Blackbox AI Response: Leveraging NVIDIA Grace Blackwell's advanced architecture, the Blackbox AI model analyzes "${inputData}" and recommends optimized computational strategies for high-performance AI workloads.`;
-                } else {
-                    mockResponse = `Mock AI Response: Based on your input "${inputData}", the ${modelId} suggests exploring innovative solutions in the field of AI.`;
-                }
-                return {
-                    output: mockResponse
-                };
+            let endpoint;
+            let body;
+            if (modelId === 'text-generation') {
+                endpoint = '/api/ai/text-generation';
+                body = { prompt: inputData };
+            } else if (modelId === 'blackbox-ai') {
+                // For Blackbox, use text generation with NVIDIA context
+                endpoint = '/api/ai/text-generation';
+                body = { prompt: `As an advanced AI on NVIDIA Grace Blackwell, analyze: ${inputData}` };
+            } else {
+                throw new Error('Unsupported model');
             }
 
-            const response = await fetch(`${this.baseUrl}/inference`, {
+            const response = await fetch(endpoint, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${this.apiKey}`
+                    'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({
-                    model_id: modelId,
-                    input: inputData
-                })
+                body: JSON.stringify(body)
             });
 
             if (!response.ok) {
-                throw new Error(`NVIDIA API error: ${response.status}`);
+                throw new Error(`AI API error: ${response.status}`);
             }
 
-            return await response.json();
+            const data = await response.json();
+            return { output: data.output };
         } catch (error) {
             console.error('AI inference error:', error);
-            throw error;
+            // Fallback to mock
+            return { output: `Fallback: Advanced AI response for "${inputData}" using ${modelId}.` };
         }
     }
 }

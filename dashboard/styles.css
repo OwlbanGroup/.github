@@ -194,6 +194,254 @@ canvas {
     color: #495057;
 }
 
+#image-generation {
+    background-color: #e9ecef;
+    border-left: 4px solid #6f42c1;
+}
+
+#image-generation form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+#image-generation label {
+    font-weight: 600;
+    color: #6f42c1;
+}
+
+#image-generation textarea {
+    padding: 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-family: inherit;
+    resize: vertical;
+    transition: border-color 0.2s ease;
+}
+
+#image-generation textarea:focus {
+    outline: none;
+    border-color: #6f42c1;
+    box-shadow: 0 0 0 2px rgba(111, 66, 193, 0.25);
+}
+
+#image-generation button {
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, #6f42c1 0%, #5a32a3 100%);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s ease, transform 0.1s ease;
+}
+
+#image-generation button:hover {
+    background: linear-gradient(135deg, #5a32a3 0%, #4a2780 100%);
+    transform: translateY(-1px);
+}
+
+#image-generation button:active {
+    transform: translateY(0);
+}
+
+#imageGenOutput {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 1rem;
+    min-height: 3rem;
+    text-align: center;
+}
+
+#code-completion {
+    background-color: #d4edda;
+    border-left: 4px solid #28a745;
+}
+
+#code-completion form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+#code-completion label {
+    font-weight: 600;
+    color: #155724;
+}
+
+#code-completion textarea {
+    padding: 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-family: monospace;
+    resize: vertical;
+    transition: border-color 0.2s ease;
+}
+
+#code-completion textarea:focus {
+    outline: none;
+    border-color: #28a745;
+    box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.25);
+}
+
+#code-completion button {
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s ease, transform 0.1s ease;
+}
+
+#code-completion button:hover {
+    background: linear-gradient(135deg, #218838 0%, #1e7e34 100%);
+    transform: translateY(-1px);
+}
+
+#code-completion button:active {
+    transform: translateY(0);
+}
+
+#codeCompOutput {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 1rem;
+    min-height: 3rem;
+    white-space: pre-wrap;
+    font-family: monospace;
+    color: #495057;
+}
+
+#sentiment-analysis {
+    background-color: #f8d7da;
+    border-left: 4px solid #dc3545;
+}
+
+#sentiment-analysis form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+#sentiment-analysis label {
+    font-weight: 600;
+    color: #721c24;
+}
+
+#sentiment-analysis textarea {
+    padding: 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-family: inherit;
+    resize: vertical;
+    transition: border-color 0.2s ease;
+}
+
+#sentiment-analysis textarea:focus {
+    outline: none;
+    border-color: #dc3545;
+    box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.25);
+}
+
+#sentiment-analysis button {
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s ease, transform 0.1s ease;
+}
+
+#sentiment-analysis button:hover {
+    background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
+    transform: translateY(-1px);
+}
+
+#sentiment-analysis button:active {
+    transform: translateY(0);
+}
+
+#sentimentOutput {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 1rem;
+    min-height: 3rem;
+    font-weight: bold;
+    text-align: center;
+    color: #495057;
+}
+
+#voice-input {
+    background-color: #cce5ff;
+    border-left: 4px solid #0066cc;
+}
+
+#voiceStart {
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, #0066cc 0%, #0056b3 100%);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s ease, transform 0.1s ease;
+}
+
+#voiceStart:hover {
+    background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
+    transform: translateY(-1px);
+}
+
+#voiceStart:active {
+    transform: translateY(0);
+}
+
+#voiceOutput {
+    margin-top: 1rem;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 1rem;
+    min-height: 2rem;
+}
+
+#voiceAiForm {
+    margin-top: 1rem;
+}
+
+#voiceAiOutput {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 1rem;
+    min-height: 3rem;
+    white-space: pre-wrap;
+    font-family: monospace;
+    color: #495057;
+}
+
+#ai-analytics {
+    background-color: #fff3cd;
+    border-left: 4px solid #ffc107;
+}
+
+#aiPredictions {
+    margin-top: 1rem;
+    font-weight: bold;
+    text-align: center;
+    color: #856404;
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
     header h1 {

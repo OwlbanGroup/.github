@@ -1,6 +1,7 @@
 const express = require('express');
 const net = require('net');
 const { exec } = require('child_process');
+const axios = require('axios');
 const app = express();
 
 function findAvailablePort(startPort) {
@@ -74,4 +75,71 @@ app.get('/api/gpu', (req, res) => {
             }
         });
     });
+});
+
+// AI Endpoints using Hugging Face Inference API
+const HF_API_KEY = process.env.HF_API_KEY || 'YOUR_HUGGINGFACE_API_KEY'; // Set in environment
+
+// Text Generation
+app.post('/api/ai/text-generation', express.json(), async (req, res) => {
+    try {
+        const { prompt } = req.body;
+        const response = await axios.post('https://api-inference.huggingface.co/models/gpt2', {
+            inputs: prompt,
+            parameters: { max_length: 100 }
+        }, {
+            headers: { 'Authorization': `Bearer ${HF_API_KEY}` }
+        });
+        res.json({ output: response.data[0].generated_text });
+    } catch (error) {
+        res.status(500).json({ error: 'Text generation failed' });
+    }
+});
+
+// Image Generation (using Stable Diffusion)
+app.post('/api/ai/image-generation', express.json(), async (req, res) => {
+    try {
+        const { prompt } = req.body;
+        const response = await axios.post('https://api-inference.huggingface.co/models/CompVis/stable-diffusion-v1-4', {
+            inputs: prompt
+        }, {
+            headers: { 'Authorization': `Bearer ${HF_API_KEY}` },
+            responseType: 'arraybuffer'
+        });
+        res.set('Content-Type', 'image/png');
+        res.send(Buffer.from(response.data));
+    } catch (error) {
+        res.status(500).json({ error: 'Image generation failed' });
+    }
+});
+
+// Code Completion
+app.post('/api/ai/code-completion', express.json(), async (req, res) => {
+    try {
+        const { code } = req.body;
+        const response = await axios.post('https://api-inference.huggingface.co/models/microsoft/CodeGPT-small-py', {
+            inputs: code,
+            parameters: { max_length: 50 }
+        }, {
+            headers: { 'Authorization': `Bearer ${HF_API_KEY}` }
+        });
+        res.json({ output: response.data[0].generated_text });
+    } catch (error) {
+        res.status(500).json({ error: 'Code completion failed' });
+    }
+});
+
+// Sentiment Analysis
+app.post('/api/ai/sentiment-analysis', express.json(), async (req, res) => {
+    try {
+        const { text } = req.body;
+        const response = await axios.post('https://api-inference.huggingface.co/models/cardiffnlp/twitter-roberta-base-sentiment', {
+            inputs: text
+        }, {
+            headers: { 'Authorization': `Bearer ${HF_API_KEY}` }
+        });
+        res.json({ sentiment: response.data[0] });
+    } catch (error) {
+        res.status(500).json({ error: 'Sentiment analysis failed' });
+    }
 });

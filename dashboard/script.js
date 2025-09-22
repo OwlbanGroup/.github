@@ -1,5 +1,5 @@
 // Chart instances
-let operationsChart, bankingChart, gpuChart;
+let operationsChart, bankingChart, gpuChart, aiAnalyticsChart;
 
 // Function to create Operations Chart
 async function createOperationsChart() {
@@ -163,24 +163,186 @@ async function handleBlackboxAIInference(event) {
     }
 }
 
+// Image Generation Handler
+async function handleImageGeneration(event) {
+    event.preventDefault();
+    const input = document.getElementById('imageGenInput').value.trim();
+    if (!input) return;
+
+    const outputDiv = document.getElementById('imageGenOutput');
+    outputDiv.innerHTML = 'Generating image...';
+
+    try {
+        const response = await fetch('/api/ai/image-generation', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt: input })
+        });
+        if (response.ok) {
+            const blob = await response.blob();
+            const imgUrl = URL.createObjectURL(blob);
+            outputDiv.innerHTML = `<img src="${imgUrl}" alt="Generated Image" style="max-width:100%;">`;
+        } else {
+            outputDiv.textContent = 'Image generation failed.';
+        }
+    } catch (error) {
+        outputDiv.textContent = `Error: ${error.message}`;
+    }
+}
+
+// Code Completion Handler
+async function handleCodeCompletion(event) {
+    event.preventDefault();
+    const input = document.getElementById('codeCompInput').value.trim();
+    if (!input) return;
+
+    const outputDiv = document.getElementById('codeCompOutput');
+    outputDiv.textContent = 'Completing code...';
+
+    try {
+        const response = await fetch('/api/ai/code-completion', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ code: input })
+        });
+        const data = await response.json();
+        outputDiv.textContent = data.output || 'No completion available.';
+    } catch (error) {
+        outputDiv.textContent = `Error: ${error.message}`;
+    }
+}
+
+// Sentiment Analysis Handler
+async function handleSentimentAnalysis(event) {
+    event.preventDefault();
+    const input = document.getElementById('sentimentInput').value.trim();
+    if (!input) return;
+
+    const outputDiv = document.getElementById('sentimentOutput');
+    outputDiv.textContent = 'Analyzing sentiment...';
+
+    try {
+        const response = await fetch('/api/ai/sentiment-analysis', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: input })
+        });
+        const data = await response.json();
+        const sentiment = data.sentiment[0].label;
+        outputDiv.textContent = `Sentiment: ${sentiment}`;
+    } catch (error) {
+        outputDiv.textContent = `Error: ${error.message}`;
+    }
+}
+
+// Voice Input Handler
+function handleVoiceInput() {
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        document.getElementById('voiceOutput').textContent = `You said: ${transcript}`;
+        document.getElementById('voiceAiInput').value = transcript;
+        document.getElementById('voiceAiForm').style.display = 'block';
+    };
+
+    recognition.onerror = (event) => {
+        document.getElementById('voiceOutput').textContent = `Error: ${event.error}`;
+    };
+
+    recognition.start();
+}
+
+// Voice AI Inference Handler
+async function handleVoiceAIInference(event) {
+    event.preventDefault();
+    const input = document.getElementById('voiceAiInput').value.trim();
+    if (!input) return;
+
+    const outputDiv = document.getElementById('voiceAiOutput');
+    outputDiv.textContent = 'Processing...';
+
+    try {
+        const result = await nvidiaIntegration.runAIInference('text-generation', input);
+        outputDiv.textContent = `AI Response: ${result.output}`;
+    } catch (error) {
+        outputDiv.textContent = `Error: ${error.message}`;
+    }
+}
+
+// Create AI Analytics Chart
+async function createAIAnalyticsChart() {
+    const ctx = document.getElementById('aiAnalyticsChart').getContext('2d');
+    aiAnalyticsChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [{
+                label: 'Predicted Revenue',
+                data: [100, 120, 110, 130, 125, 140],
+                borderColor: 'rgba(255, 193, 7, 1)',
+                backgroundColor: 'rgba(255, 193, 7, 0.2)',
+                fill: true
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
+
+// Update AI Analytics with predictions
+function updateAIAnalytics() {
+    // Simple prediction: average + trend
+    const data = aiAnalyticsChart.data.datasets[0].data;
+    const newVal = data[data.length - 1] + (Math.random() - 0.5) * 10;
+    data.push(newVal);
+    data.shift();
+    aiAnalyticsChart.update();
+    document.getElementById('aiPredictions').textContent = `Next prediction: ${Math.round(newVal + 5)}`;
+}
+
 // Initialize charts on page load
 document.addEventListener('DOMContentLoaded', () => {
     createOperationsChart();
     createBankingChart();
     createGPUChart();
+    createAIAnalyticsChart();
 
-    // Add AI form handler
+    // Add AI form handlers
     const aiForm = document.getElementById('aiForm');
     aiForm.addEventListener('submit', handleAIInference);
 
-    // Add Blackbox AI form handler
     const blackboxAiForm = document.getElementById('blackboxAiForm');
     blackboxAiForm.addEventListener('submit', handleBlackboxAIInference);
+
+    const imageGenForm = document.getElementById('imageGenForm');
+    imageGenForm.addEventListener('submit', handleImageGeneration);
+
+    const codeCompForm = document.getElementById('codeCompForm');
+    codeCompForm.addEventListener('submit', handleCodeCompletion);
+
+    const sentimentForm = document.getElementById('sentimentForm');
+    sentimentForm.addEventListener('submit', handleSentimentAnalysis);
+
+    const voiceStartBtn = document.getElementById('voiceStart');
+    voiceStartBtn.addEventListener('click', handleVoiceInput);
+
+    const voiceAiForm = document.getElementById('voiceAiForm');
+    voiceAiForm.addEventListener('submit', handleVoiceAIInference);
 
     // Set up real-time updates every 5 seconds
     setInterval(() => {
         updateOperationsChart();
         updateBankingChart();
         updateGPUChart();
+        updateAIAnalytics();
     }, 5000);
 });
