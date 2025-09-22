@@ -29,6 +29,7 @@
     "dockerode": "^4.0.2"
   },
   "devDependencies": {
-    "@playwright/test": "^1.40.0"
+    "@playwright/test": "^1.40.0",
+    "@axe-core/playwright": "^4.8.0"
   }
 }
