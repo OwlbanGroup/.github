@@ -13,6 +13,25 @@ test.beforeAll(async () => {
   }
 });
 
+// Enhanced test setup with better error handling
+test.beforeEach(async ({ page }) => {
+  // Set up error handling for the page
+  page.on('pageerror', (error) => {
+    console.error('Page error:', error.message);
+  });
+
+  page.on('requestfailed', (request) => {
+    console.warn('Failed request:', request.url(), request.failure()?.errorText);
+  });
+
+  // Set up console logging
+  page.on('console', (msg) => {
+    if (msg.type() === 'error') {
+      console.error('Console error:', msg.text());
+    }
+  });
+});
+
 test.describe('Dashboard E2E Tests', () => {
   // Assuming server is running on localhost:3000
   // In production, use environment variables or start server in globalSetup

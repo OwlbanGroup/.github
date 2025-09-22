@@ -115,7 +115,7 @@ function Test-NvidiaEndpoints {
         $response = Invoke-WebRequest -Uri $NVIDIA_STATUS_URL -TimeoutSec 10 -ErrorAction Stop
         if ($response.StatusCode -eq 200) {
             $content = $response.Content | ConvertFrom-Json
-            if ($content.gpu_detected -ne $null) {
+            if ($null -ne $content.gpu_detected) {
                 Write-LogSuccess "NVIDIA status endpoint is responding"
                 return $true
             } else {
@@ -233,7 +233,7 @@ function Test-NetworkConnectivity {
     Write-LogInfo "Checking network connectivity..."
 
     try {
-        $response = Invoke-WebRequest -Uri "http://www.google.com" -TimeoutSec 5 -ErrorAction Stop
+        Invoke-WebRequest -Uri "http://www.google.com" -TimeoutSec 5 -ErrorAction Stop
         Write-LogSuccess "Internet connectivity OK"
         return $true
     } catch {

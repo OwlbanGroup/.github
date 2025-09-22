@@ -35,5 +35,12 @@
   "devDependencies": {
     "@axe-core/playwright": "^4.10.2",
     "@playwright/test": "^1.40.0"
+  },
+  "optionalDependencies": {
+    "@opentelemetry/api": "^1.7.0",
+    "@opentelemetry/sdk-node": "^0.45.0",
+    "@opentelemetry/auto-instrumentations-node": "^0.40.0",
+    "@opentelemetry/exporter-jaeger": "^1.18.0",
+    "@opentelemetry/exporter-zipkin": "^1.18.0"
   }
 }

@@ -17,6 +17,51 @@ const AWS = require('aws-sdk');
 const promClient = require('prom-client');
 const Docker = require('dockerode');
 const { FinancialDataManager } = require('./financial-services');
+const {
+  validateApiVersion,
+  ensureCompatibility,
+  formatResponse,
+  getVersionInfo
+} = require('./middleware/apiVersioning');
+
+// OpenTelemetry Distributed Tracing Setup
+let tracer, span;
+try {
+  const { NodeSDK } = require('@opentelemetry/sdk-node');
+  const { getNodeAutoInstrumentations } = require('@opentelemetry/auto-instrumentations-node');
+  const { JaegerExporter } = require('@opentelemetry/exporter-jaeger');
+  const { ZipkinExporter } = require('@opentelemetry/exporter-zipkin');
+
+  // Configure exporters based on environment
+  const exporters = [];
+  if (process.env.JAEGER_ENDPOINT) {
+    exporters.push(new JaegerExporter({
+      endpoint: process.env.JAEGER_ENDPOINT,
+    }));
+  }
+  if (process.env.ZIPKIN_ENDPOINT) {
+    exporters.push(new ZipkinExporter({
+      url: process.env.ZIPKIN_ENDPOINT,
+    }));
+  }
+
+  if (exporters.length > 0) {
+    const sdk = new NodeSDK({
+      serviceName: 'ai-dashboard',
+      serviceVersion: '1.0.0',
+      instrumentations: [getNodeAutoInstrumentations()],
+      traceExporter: exporters,
+    });
+
+    sdk.start();
+    console.log('✅ OpenTelemetry distributed tracing initialized');
+
+    const { trace } = require('@opentelemetry/api');
+    tracer = trace.getTracer('ai-dashboard');
+  }
+} catch (error) {
+    console.warn('⚠️ OpenTelemetry not available:', error.message);
+}
 
 // NVIDIA Cloud Integration
 const nvidiaCloud = {
@@ -72,6 +117,11 @@ const limiter = rateLimit({
     max: 100 // limit each IP to 100 requests per windowMs
 });
 app.use(limiter);
+
+// API Versioning Middleware - only apply to API routes
+app.use('/api', validateApiVersion);
+app.use('/api', ensureCompatibility);
+app.use('/api', formatResponse);
 
 // Redis client for caching
 const redisClient = createClient();
