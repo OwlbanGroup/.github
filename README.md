@@ -64,6 +64,10 @@ A comprehensive, enterprise-grade AI dashboard integrating multiple AI platforms
    AWS_ACCESS_KEY_ID=your_aws_key
    AWS_SECRET_ACCESS_KEY=your_aws_secret
 
+   # NVIDIA Cloud Integration (for NGC services)
+   NVIDIA_API_KEY=your_nvidia_ngc_api_key
+   NVIDIA_ORG_ID=your_nvidia_org_id
+
    # Database & Cache
    MONGODB_URI=mongodb://localhost:27017/dashboard
    REDIS_URL=redis://localhost:6379
@@ -136,10 +140,17 @@ ai-dashboard/
 - `POST /api/ai/rag-query` - RAG-powered queries
 - `POST /api/ai/fine-tune` - Model fine-tuning
 
+### NVIDIA Cloud Services (Protected)
+- `GET /api/nvidia/models` - List available NVIDIA NGC models
+- `POST /api/nvidia/inference` - Run inference on NVIDIA cloud models
+- `GET /api/nvidia/instances` - List NVIDIA cloud instances
+- `POST /api/nvidia/deploy` - Deploy models to NVIDIA cloud
+- `GET /api/nvidia/org` - Get NVIDIA organization info
+
 ### System Endpoints
 - `GET /api/operations` - Operations KPIs
 - `GET /api/banking` - Banking metrics
-- `GET /api/gpu` - NVIDIA GPU metrics
+- `GET /api/gpu` - Local NVIDIA GPU metrics
 - `GET /metrics` - Prometheus metrics
 
 ### Infrastructure

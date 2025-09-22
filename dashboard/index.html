@@ -132,6 +132,38 @@
                 <div id="openaiImageOutput"></div>
             </div>
         </section>
+        <section id="nvidia-cloud">
+            <h2>NVIDIA Cloud AI Control Panel</h2>
+            <div class="nvidia-models">
+                <h3>Available Models</h3>
+                <select id="nvidiaModelSelect">
+                    <option value="">Select a model...</option>
+                </select>
+                <button id="loadNvidiaModels">Load Models</button>
+            </div>
+            <div class="nvidia-inference">
+                <h3>AI Inference</h3>
+                <form id="nvidiaInferenceForm">
+                    <input type="text" id="nvidiaInput" placeholder="Enter your prompt..." required>
+                    <button type="submit">Run Inference</button>
+                </form>
+                <div id="nvidiaOutput"></div>
+            </div>
+            <div class="nvidia-instances">
+                <h3>Cloud Instances</h3>
+                <div id="nvidiaInstances"></div>
+            </div>
+            <div class="nvidia-deploy">
+                <h3>Model Deployment</h3>
+                <form id="nvidiaDeployForm">
+                    <input type="text" id="deployModelId" placeholder="Model ID" required>
+                    <input type="text" id="deployInstanceType" placeholder="Instance Type" required>
+                    <input type="text" id="deployName" placeholder="Deployment Name" required>
+                    <button type="submit">Deploy Model</button>
+                </form>
+                <div id="nvidiaDeployOutput"></div>
+            </div>
+        </section>
     </main>
     <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.6/i18next.min.js"></script>

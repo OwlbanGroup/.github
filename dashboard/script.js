@@ -398,3 +398,142 @@ document.addEventListener('DOMContentLoaded', () => {
         updateAIAnalytics();
     }, 5000);
 });
+
+// NVIDIA Cloud Integration Functions
+
+// Load NVIDIA Models
+async function loadNvidiaModels() {
+    try {
+        const response = await fetch('/api/nvidia/models', {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+        const data = await response.json();
+        const select = document.getElementById('nvidiaModelSelect');
+        select.innerHTML = '<option value="">Select a model...</option>';
+
+        if (data.models) {
+            data.models.forEach(model => {
+                const option = document.createElement('option');
+                option.value = model.id;
+                option.textContent = model.name;
+                select.appendChild(option);
+            });
+        }
+    } catch (error) {
+        console.error('Error loading NVIDIA models:', error);
+        document.getElementById('nvidiaModelSelect').innerHTML = '<option value="">Error loading models</option>';
+    }
+}
+
+// NVIDIA Inference Handler
+async function handleNvidiaInference(event) {
+    event.preventDefault();
+    const input = document.getElementById('nvidiaInput').value.trim();
+    const model = document.getElementById('nvidiaModelSelect').value;
+    if (!input || !model) return;
+
+    const outputDiv = document.getElementById('nvidiaOutput');
+    outputDiv.textContent = 'Running inference...';
+
+    try {
+        const response = await fetch('/api/nvidia/inference', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify({
+                model: model,
+                input: input,
+                parameters: { maxTokens: 100, temperature: 0.7 }
+            })
+        });
+        const data = await response.json();
+        outputDiv.textContent = `NVIDIA AI Response: ${data.output}`;
+    } catch (error) {
+        outputDiv.textContent = `Error: ${error.message}`;
+    }
+}
+
+// Load NVIDIA Instances
+async function loadNvidiaInstances() {
+    try {
+        const response = await fetch('/api/nvidia/instances', {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+        const data = await response.json();
+        const instancesDiv = document.getElementById('nvidiaInstances');
+
+        if (data.instances && data.instances.length > 0) {
+            instancesDiv.innerHTML = '<h4>Available Instances:</h4><ul>' +
+                data.instances.map(instance =>
+                    `<li>${instance.name} - ${instance.type} (${instance.status})</li>`
+                ).join('') + '</ul>';
+        } else {
+            instancesDiv.innerHTML = '<p>No instances available</p>';
+        }
+    } catch (error) {
+        console.error('Error loading NVIDIA instances:', error);
+        document.getElementById('nvidiaInstances').innerHTML = '<p>Error loading instances</p>';
+    }
+}
+
+// NVIDIA Model Deployment Handler
+async function handleNvidiaDeploy(event) {
+    event.preventDefault();
+    const modelId = document.getElementById('deployModelId').value.trim();
+    const instanceType = document.getElementById('deployInstanceType').value.trim();
+    const name = document.getElementById('deployName').value.trim();
+
+    if (!modelId || !instanceType || !name) return;
+
+    const outputDiv = document.getElementById('nvidiaDeployOutput');
+    outputDiv.textContent = 'Deploying model...';
+
+    try {
+        const response = await fetch('/api/nvidia/deploy', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify({
+                modelId: modelId,
+                instanceType: instanceType,
+                name: name
+            })
+        });
+        const data = await response.json();
+        outputDiv.textContent = `Deployment successful! ID: ${data.deploymentId}, Status: ${data.status}`;
+    } catch (error) {
+        outputDiv.textContent = `Error: ${error.message}`;
+    }
+}
+
+// Initialize NVIDIA Cloud features
+document.addEventListener('DOMContentLoaded', () => {
+    // ... existing code ...
+
+    // NVIDIA Cloud handlers
+    const loadModelsBtn = document.getElementById('loadNvidiaModels');
+    if (loadModelsBtn) {
+        loadModelsBtn.addEventListener('click', loadNvidiaModels);
+    }
+
+    const nvidiaInferenceForm = document.getElementById('nvidiaInferenceForm');
+    if (nvidiaInferenceForm) {
+        nvidiaInferenceForm.addEventListener('submit', handleNvidiaInference);
+    }
+
+    const nvidiaDeployForm = document.getElementById('nvidiaDeployForm');
+    if (nvidiaDeployForm) {
+        nvidiaDeployForm.addEventListener('submit', handleNvidiaDeploy);
+    }
+
+    // Load NVIDIA instances on page load
+    loadNvidiaInstances();
+});

@@ -485,6 +485,39 @@ test.describe('Dashboard E2E Tests', () => {
     expect(rateLimited).toBe(true);
   });
 
+  // NVIDIA Cloud Integration Tests
+  test('NVIDIA models list', async ({ page }) => {
+    test.skip(!serverReady, 'Server not ready');
+    await page.goto('http://localhost:3000');
+    const result = await page.evaluate(async () => {
+      const response = await fetch('/api/nvidia/models', {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+      });
+      return response.status;
+    });
+    // May fail if no NVIDIA API key, but test the endpoint exists
+    expect([200, 401, 403]).toContain(result);
+  });
+
+  test('NVIDIA instances list', async ({ page }) => {
+    test.skip(!serverReady, 'Server not ready');
+    await page.goto('http://localhost:3000');
+    const result = await page.evaluate(async () => {
+      const response = await fetch('/api/nvidia/instances', {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+      });
+      return response.status;
+    });
+    expect([200, 401, 403]).toContain(result);
+  });
+
+  test('NVIDIA cloud UI elements', async ({ page }) => {
+    await page.goto('http://localhost:3000');
+    const nvidiaSection = page.locator('#nvidia-cloud');
+    await expect(nvidiaSection).toBeVisible();
+    await expect(nvidiaSection.locator('h2')).toContainText('NVIDIA Cloud AI Control Panel');
+  });
+
   // RAG query test
   test('RAG query', async ({ page }) => {
     test.skip(!serverReady, 'Server not ready');

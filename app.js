@@ -17,6 +17,13 @@ const AWS = require('aws-sdk');
 const promClient = require('prom-client');
 const Docker = require('dockerode');
 
+// NVIDIA Cloud Integration
+const nvidiaCloud = {
+  baseUrl: 'https://api.ngc.nvidia.com/v2',
+  apiKey: process.env.NVIDIA_API_KEY,
+  orgId: process.env.NVIDIA_ORG_ID
+};
+
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
@@ -338,6 +345,127 @@ app.post('/api/ai/aws-sagemaker', authenticateToken, express.json(), async (req,
         res.json({ output: JSON.parse(result.Body.toString()) });
     } catch (error) {
         res.status(500).json({ error: 'AWS SageMaker failed' });
+    }
+});
+
+// NVIDIA NGC Cloud Integration
+// List available models
+app.get('/api/nvidia/models', authenticateToken, async (req, res) => {
+    try {
+        const response = await axios.get(`${nvidiaCloud.baseUrl}/models`, {
+            headers: {
+                'Authorization': `Bearer ${nvidiaCloud.apiKey}`,
+                'Content-Type': 'application/json'
+            },
+            params: {
+                org: nvidiaCloud.orgId,
+                pageSize: 50
+            }
+        });
+        res.json({ models: response.data.models });
+    } catch (error) {
+        console.error('NVIDIA models fetch failed:', error.response?.data || error.message);
+        res.status(500).json({ error: 'Failed to fetch NVIDIA models' });
+    }
+});
+
+// NVIDIA AI Inference
+app.post('/api/nvidia/inference', authenticateToken, express.json(), async (req, res) => {
+    try {
+        const { model, input, parameters = {} } = req.body;
+
+        const response = await axios.post(
+            `${nvidiaCloud.baseUrl}/models/${model}/infer`,
+            {
+                input: input,
+                parameters: {
+                    max_tokens: parameters.maxTokens || 100,
+                    temperature: parameters.temperature || 0.7,
+                    ...parameters
+                }
+            },
+            {
+                headers: {
+                    'Authorization': `Bearer ${nvidiaCloud.apiKey}`,
+                    'Content-Type': 'application/json'
+                }
+            }
+        );
+
+        res.json({
+            output: response.data.output,
+            usage: response.data.usage
+        });
+    } catch (error) {
+        console.error('NVIDIA inference failed:', error.response?.data || error.message);
+        res.status(500).json({ error: 'NVIDIA inference failed' });
+    }
+});
+
+// NVIDIA GPU Cloud Instances
+app.get('/api/nvidia/instances', authenticateToken, async (req, res) => {
+    try {
+        const response = await axios.get(`${nvidiaCloud.baseUrl}/instances`, {
+            headers: {
+                'Authorization': `Bearer ${nvidiaCloud.apiKey}`,
+                'Content-Type': 'application/json'
+            },
+            params: {
+                org: nvidiaCloud.orgId
+            }
+        });
+        res.json({ instances: response.data.instances });
+    } catch (error) {
+        console.error('NVIDIA instances fetch failed:', error.response?.data || error.message);
+        res.status(500).json({ error: 'Failed to fetch NVIDIA instances' });
+    }
+});
+
+// NVIDIA Model Deployment
+app.post('/api/nvidia/deploy', authenticateToken, express.json(), async (req, res) => {
+    try {
+        const { modelId, instanceType, name } = req.body;
+
+        const response = await axios.post(
+            `${nvidiaCloud.baseUrl}/deployments`,
+            {
+                model: modelId,
+                instance: instanceType,
+                name: name,
+                org: nvidiaCloud.orgId
+            },
+            {
+                headers: {
+                    'Authorization': `Bearer ${nvidiaCloud.apiKey}`,
+                    'Content-Type': 'application/json'
+                }
+            }
+        );
+
+        res.json({
+            deploymentId: response.data.id,
+            status: response.data.status,
+            endpoint: response.data.endpoint
+        });
+    } catch (error) {
+        console.error('NVIDIA deployment failed:', error.response?.data || error.message);
+        res.status(500).json({ error: 'NVIDIA deployment failed' });
+    }
+});
+
+// NVIDIA Organization Info
+app.get('/api/nvidia/org', authenticateToken, async (req, res) => {
+    try {
+        const response = await axios.get(`${nvidiaCloud.baseUrl}/orgs/${nvidiaCloud.orgId}`, {
+            headers: {
+                'Authorization': `Bearer ${nvidiaCloud.apiKey}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        res.json({ org: response.data });
+    } catch (error) {
+        console.error('NVIDIA org fetch failed:', error.response?.data || error.message);
+        res.status(500).json({ error: 'Failed to fetch NVIDIA organization info' });
     }
 });
 
