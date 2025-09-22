@@ -1,77 +1,171 @@
-# Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider
-# Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# User-specific stuff
-.idea/**/workspace.xml
-.idea/**/tasks.xml
-.idea/**/usage.statistics.xml
-.idea/**/dictionaries
-.idea/**/shelf
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-# AWS User-specific
-.idea/**/aws.xml
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
 
-# Generated files
-.idea/**/contentModel.xml
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
 
-# Sensitive or high-churn files
-.idea/**/dataSources/
-.idea/**/dataSources.ids
-.idea/**/dataSources.local.xml
-.idea/**/sqlDataSources.xml
-.idea/**/dynamic.xml
-.idea/**/uiDesigner.xml
-.idea/**/dbnavigator.xml
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
 
-# Gradle
-.idea/**/gradle.xml
-.idea/**/libraries
+# nyc test coverage
+.nyc_output
 
-# Gradle and Maven with auto-import
-# When using Gradle or Maven with auto-import, you should exclude module files,
-# since they will be recreated, and may cause churn.  Uncomment if using
-# auto-import.
-# .idea/artifacts
-# .idea/compiler.xml
-# .idea/jarRepositories.xml
-# .idea/modules.xml
-# .idea/*.iml
-# .idea/modules
-# *.iml
-# *.ipr
+# Grunt intermediate storage (https://gruntjs.com/creating-plugins#storing-task-files)
+.grunt
 
-# CMake
-cmake-build-*/
+# Bower dependency directory (https://bower.io/)
+bower_components
 
-# Mongo Explorer plugin
-.idea/**/mongoSettings.xml
+# node-waf configuration
+.lock-wscript
 
-# File-based project format
-*.iws
+# Compiled binary addons (https://nodejs.org/api/addons.html)
+build/Release
 
-# IntelliJ
-out/
+# Dependency directories
+jspm_packages/
 
-# mpeltonen/sbt-idea plugin
-.idea_modules/
+# TypeScript v1 declaration files
+typings/
 
-# JIRA plugin
-atlassian-ide-plugin.xml
+# TypeScript cache
+*.tsbuildinfo
 
-# Cursive Clojure plugin
-.idea/replstate.xml
+# Optional npm cache directory
+.npm
 
-# SonarLint plugin
-.idea/sonarlint/
+# Optional eslint cache
+.eslintcache
 
-# Crashlytics plugin (for Android Studio and IntelliJ)
-com_crashlytics_export_strings.xml
-crashlytics.properties
-crashlytics-build.properties
-fabric.properties
+# Microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
 
-# Editor-based Rest Client
-.idea/httpRequests
+# Optional REPL history
+.node_repl_history
 
-# Android studio 3.1+ serialized cache file
-.idea/caches/build_file_checksums.ser
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# dotenv environment variables file
+.env.test
+
+# parcel-bundler cache (https://parceljs.org/)
+.cache
+.parcel-cache
+
+# Next.js build output
+.next
+
+# Nuxt.js build / generate output
+.nuxt
+dist
+
+# Gatsby files
+.cache/
+public
+
+# Storybook build outputs
+.out
+.storybook-out
+
+# Temporary folders
+tmp/
+temp/
+
+# Editor directories and files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# PM2
+.pm2/
+
+# Application specific
+uploads/
+backups/
+data/
+*.sqlite
+*.sqlite3
+
+# API Keys and sensitive data
+config/keys.js
+config/secrets.js
+secrets/
+keys/
+
+# Docker
+.dockerignore
+
+# Kubernetes
+*.kube
+
+# SSL certificates
+*.pem
+*.key
+*.crt
+
+# Test results
+test-results/
+playwright-report/
+playwright/.cache/
+
+# Build outputs
+build/
+dist/
+
+# Cache directories
+.cache/
+.parcel-cache/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Backup files
+*.bak
+*.backup
+
+# Auto-generated files
+auto-generated/
+
+# Local development
+.local/
