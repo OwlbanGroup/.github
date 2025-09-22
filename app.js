@@ -5,7 +5,31 @@ const axios = require('axios');
 const OpenAI = require('openai');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const mongoose = require('mongoose');
+const { Server } = require('socket.io');
+const http = require('http');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+const { createClient } = require('redis');
+const { PredictionServiceClient } = require('@google-cloud/aiplatform');
+const { AzureOpenAI } = require('@azure/openai');
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server);
+
+// MongoDB connection
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/dashboard', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}).then(() => console.log('MongoDB connected'))
+  .catch(err => console.error('MongoDB connection error:', err));
+
+// User schema
+const userSchema = new mongoose.Schema({
+    username: { type: String, required: true, unique: true },
+    password: { type: String, required: true }
+});
+const User = mongoose.model('User', userSchema);
 
 function findAvailablePort(startPort) {
     return new Promise((resolve, reject) => {
@@ -33,6 +57,29 @@ findAvailablePort(3000).then(availablePort => {
 
 // Middleware
 app.use(express.json());
+app.use(helmet()); // Security headers
+
+// Rate limiting
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100 // limit each IP to 100 requests per windowMs
+});
+app.use(limiter);
+
+// Redis client for caching
+const redisClient = createClient();
+redisClient.on('error', (err) => console.log('Redis Client Error', err));
+redisClient.connect();
+
+// Google Cloud AI Platform
+const predictionServiceClient = new PredictionServiceClient();
+
+// Azure OpenAI
+const azureOpenai = new AzureOpenAI({
+    endpoint: process.env.AZURE_OPENAI_ENDPOINT || 'YOUR_AZURE_ENDPOINT',
+    apiKey: process.env.AZURE_OPENAI_API_KEY || 'YOUR_AZURE_API_KEY',
+    apiVersion: '2023-12-01-preview'
+});
 
 // JWT Secret
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret';
@@ -58,24 +105,33 @@ app.post('/api/auth/register', async (req, res) => {
     const { username, password } = req.body;
     if (!username || !password) return res.status(400).json({ error: 'Username and password required' });
 
-    const existingUser = users.find(u => u.username === username);
-    if (existingUser) return res.status(400).json({ error: 'User already exists' });
+    try {
+        const existingUser = await User.findOne({ username });
+        if (existingUser) return res.status(400).json({ error: 'User already exists' });
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    users.push({ username, password: hashedPassword });
-    res.status(201).json({ message: 'User registered successfully' });
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const newUser = new User({ username, password: hashedPassword });
+        await newUser.save();
+        res.status(201).json({ message: 'User registered successfully' });
+    } catch (error) {
+        res.status(500).json({ error: 'Registration failed' });
+    }
 });
 
 app.post('/api/auth/login', async (req, res) => {
     const { username, password } = req.body;
-    const user = users.find(u => u.username === username);
-    if (!user) return res.status(400).json({ error: 'Invalid credentials' });
+    try {
+        const user = await User.findOne({ username });
+        if (!user) return res.status(400).json({ error: 'Invalid credentials' });
 
-    const isValid = await bcrypt.compare(password, user.password);
-    if (!isValid) return res.status(400).json({ error: 'Invalid credentials' });
+        const isValid = await bcrypt.compare(password, user.password);
+        if (!isValid) return res.status(400).json({ error: 'Invalid credentials' });
 
-    const token = jwt.sign({ username: user.username }, JWT_SECRET, { expiresIn: '1h' });
-    res.json({ token });
+        const token = jwt.sign({ username: user.username }, JWT_SECRET, { expiresIn: '1h' });
+        res.json({ token });
+    } catch (error) {
+        res.status(500).json({ error: 'Login failed' });
+    }
 });
 
 // Serve static files from the dashboard directory
@@ -227,4 +283,50 @@ app.post('/api/ai/openai-image', authenticateToken, express.json(), async (req, 
     } catch (error) {
         res.status(500).json({ error: 'OpenAI image generation failed' });
     }
+});
+
+// Google Cloud Vertex AI
+app.post('/api/ai/google-vertex', authenticateToken, express.json(), async (req, res) => {
+    try {
+        const { prompt } = req.body;
+        const [response] = await predictionServiceClient.predict({
+            endpoint: 'projects/YOUR_PROJECT_ID/locations/us-central1/endpoints/YOUR_ENDPOINT_ID',
+            instances: [{ content: prompt }]
+        });
+        res.json({ output: response.predictions[0] });
+    } catch (error) {
+        res.status(500).json({ error: 'Google Vertex AI failed' });
+    }
+});
+
+// Azure OpenAI
+app.post('/api/ai/azure-openai-chat', authenticateToken, express.json(), async (req, res) => {
+    try {
+        const { messages } = req.body;
+        const completion = await azureOpenai.chat.completions.create({
+            model: 'gpt-4',
+            messages: messages
+        });
+        res.json({ response: completion.choices[0].message.content });
+    } catch (error) {
+        res.status(500).json({ error: 'Azure OpenAI failed' });
+    }
+});
+
+// WebSocket for real-time collaboration
+io.on('connection', (socket) => {
+    console.log('User connected:', socket.id);
+
+    socket.on('join-room', (room) => {
+        socket.join(room);
+        socket.to(room).emit('user-joined', socket.id);
+    });
+
+    socket.on('ai-inference', (data) => {
+        socket.to(data.room).emit('ai-inference', data);
+    });
+
+    socket.on('disconnect', () => {
+        console.log('User disconnected:', socket.id);
+    });
 });

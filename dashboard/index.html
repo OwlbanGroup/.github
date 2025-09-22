@@ -133,8 +133,31 @@
             </div>
         </section>
     </main>
+    <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.6/i18next.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@7.2.0/i18nextBrowserLanguageDetector.min.js"></script>
     <script src="nvidia.js"></script>
     <script src="script.js"></script>
     <script src="collaboration.js"></script>
+    <script>
+        // Dark mode toggle
+        const toggle = document.createElement('button');
+        toggle.textContent = 'Toggle Dark Mode';
+        toggle.style.position = 'fixed';
+        toggle.style.top = '10px';
+        toggle.style.right = '10px';
+        toggle.onclick = () => document.body.classList.toggle('dark-mode');
+        document.body.appendChild(toggle);
+
+        // i18next initialization
+        i18next.use(i18nextBrowserLanguageDetector).init({
+            resources: {
+                en: { translation: { title: "Owlban Group Dashboard" } },
+                es: { translation: { title: "Panel de Control del Grupo Owlban" } }
+            },
+            fallbackLng: 'en'
+        });
+        document.querySelector('h1').textContent = i18next.t('title');
+    </script>
 </body>
 </html>

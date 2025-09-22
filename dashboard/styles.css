@@ -459,6 +459,36 @@ canvas {
     color: #856404;
 }
 
+/* Dark mode */
+.dark-mode {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: #e9ecef;
+}
+
+.dark-mode header {
+    background: linear-gradient(135deg, #0f3460 0%, #1a1a2e 100%);
+}
+
+.dark-mode section {
+    background-color: #2d3748;
+    color: #e9ecef;
+}
+
+.dark-mode #gpu {
+    background-color: #2d3748;
+    border-left-color: #48bb78;
+}
+
+.dark-mode #ai {
+    background-color: #2d3748;
+    border-left-color: #ed8936;
+}
+
+.dark-mode #blackbox-ai {
+    background-color: #2d3748;
+    border-left-color: #4299e1;
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
     header h1 {
