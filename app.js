@@ -13,6 +13,10 @@ const rateLimit = require('express-rate-limit');
 const { createClient } = require('redis');
 const { PredictionServiceClient } = require('@google-cloud/aiplatform');
 const { AzureOpenAI } = require('@azure/openai');
+const AWS = require('aws-sdk');
+const promClient = require('prom-client');
+const Docker = require('dockerode');
+const k8s = require('kubernetes-client');
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
@@ -310,6 +314,78 @@ app.post('/api/ai/azure-openai-chat', authenticateToken, express.json(), async (
         res.json({ response: completion.choices[0].message.content });
     } catch (error) {
         res.status(500).json({ error: 'Azure OpenAI failed' });
+    }
+});
+
+// AWS SageMaker
+AWS.config.update({
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    region: process.env.AWS_REGION || 'us-east-1'
+});
+const sagemaker = new AWS.SageMaker();
+
+app.post('/api/ai/aws-sagemaker', authenticateToken, express.json(), async (req, res) => {
+    try {
+        const { endpointName, inputData } = req.body;
+        const params = {
+            EndpointName: endpointName,
+            ContentType: 'application/json',
+            Body: JSON.stringify(inputData)
+        };
+        const result = await sagemaker.invokeEndpoint(params).promise();
+        res.json({ output: JSON.parse(result.Body.toString()) });
+    } catch (error) {
+        res.status(500).json({ error: 'AWS SageMaker failed' });
+    }
+});
+
+// Prometheus metrics
+const register = new promClient.Registry();
+promClient.collectDefaultMetrics({ register });
+const httpRequestDuration = new promClient.Histogram({
+    name: 'http_request_duration_seconds',
+    help: 'Duration of HTTP requests in seconds',
+    labelNames: ['method', 'route', 'status_code'],
+    buckets: [0.1, 0.5, 1, 2, 5]
+});
+register.registerMetric(httpRequestDuration);
+
+app.get('/metrics', (req, res) => {
+    res.set('Content-Type', register.contentType);
+    register.metrics().then(metrics => res.end(metrics));
+});
+
+// Docker integration
+const docker = new Docker();
+
+app.post('/api/docker/containers', authenticateToken, express.json(), async (req, res) => {
+    try {
+        const { image, name } = req.body;
+        const container = await docker.createContainer({
+            Image: image,
+            name: name,
+            Tty: true
+        });
+        await container.start();
+        res.json({ containerId: container.id });
+    } catch (error) {
+        res.status(500).json({ error: 'Docker container creation failed' });
+    }
+});
+
+// Kubernetes integration
+const kubeconfig = new k8s.KubeConfig();
+kubeconfig.loadFromDefault();
+const k8sApi = kubeconfig.makeApiClient(k8s.CoreV1Api);
+
+app.post('/api/kubernetes/deploy', authenticateToken, express.json(), async (req, res) => {
+    try {
+        const { deployment } = req.body;
+        const response = await k8sApi.createNamespacedDeployment('default', deployment);
+        res.json({ deployment: response.body });
+    } catch (error) {
+        res.status(500).json({ error: 'Kubernetes deployment failed' });
     }
 });
 

@@ -20,6 +20,10 @@
     "express-rate-limit": "^7.1.5",
     "redis": "^4.6.11",
     "i18next": "^23.7.6",
-    "i18next-browser-languagedetector": "^7.2.0"
+    "i18next-browser-languagedetector": "^7.2.0",
+    "aws-sdk": "^2.1548.0",
+    "prom-client": "^15.1.0",
+    "dockerode": "^4.0.2",
+    "kubernetes-client": "^9.0.0"
   }
 }
