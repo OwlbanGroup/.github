@@ -103,9 +103,6 @@ function findAvailablePort(startPort) {
 }
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
-});
 
 // Middleware
 app.use(express.json());
@@ -1086,3 +1083,63 @@ async function getMarketNews(categories) {
         }
     ];
 }
+
+// Error handling middleware
+const errorHandler = require('./middleware/errorHandler');
+
+// Apply error handling middleware (must be last)
+app.use(errorHandler);
+
+// 404 handler for undefined routes
+app.use('*', (req, res) => {
+    res.status(404).json({
+        error: 'Route not found',
+        path: req.originalUrl,
+        method: req.method,
+        timestamp: new Date().toISOString()
+    });
+});
+
+// Start server
+async function startServer() {
+    try {
+        // Find available port if needed
+        const finalPort = await findAvailablePort(port);
+        if (finalPort !== port) {
+            console.log(`Port ${port} in use, using ${finalPort} instead`);
+        }
+
+        server.listen(finalPort, () => {
+            console.log(`✅ AI Dashboard Server running at http://localhost:${finalPort}`);
+            console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
+            console.log(`🔗 WebSocket server enabled for real-time features`);
+            console.log(`📈 Financial data integration active`);
+            console.log(`🤖 AI services: OpenAI, Hugging Face, Google Cloud, Azure, AWS, NVIDIA`);
+            console.log(`📊 Metrics available at http://localhost:${finalPort}/metrics`);
+        });
+
+        // Handle server shutdown gracefully
+        process.on('SIGTERM', () => {
+            console.log('SIGTERM received, shutting down gracefully');
+            server.close(() => {
+                console.log('Server closed');
+                process.exit(0);
+            });
+        });
+
+        process.on('SIGINT', () => {
+            console.log('SIGINT received, shutting down gracefully');
+            server.close(() => {
+                console.log('Server closed');
+                process.exit(0);
+            });
+        });
+
+    } catch (error) {
+        console.error('❌ Failed to start server:', error);
+        process.exit(1);
+    }
+}
+
+// Start the server
+startServer();
