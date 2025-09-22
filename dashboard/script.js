@@ -62,8 +62,40 @@ async function createBankingChart() {
     }
 }
 
+// Function to create GPU Chart
+async function createGPUChart() {
+    try {
+        await nvidiaIntegration.initialize();
+        const metrics = await nvidiaIntegration.getGPUMetrics();
+        const gpuCtx = document.getElementById('gpuChart').getContext('2d');
+        const gpuChart = new Chart(gpuCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Utilization (%)', 'Temperature (°C)', 'Memory Used (GB)'],
+                datasets: [{
+                    label: 'GPU Metrics',
+                    data: [metrics.utilization, metrics.temperature, metrics.memory.used / (1024 * 1024 * 1024)],
+                    backgroundColor: ['rgba(255, 99, 132, 0.5)', 'rgba(54, 162, 235, 0.5)', 'rgba(255, 205, 86, 0.5)'],
+                    borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 205, 86, 1)'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    } catch (error) {
+        console.error('Error creating GPU chart:', error);
+    }
+}
+
 // Initialize charts on page load
 document.addEventListener('DOMContentLoaded', () => {
     createOperationsChart();
     createBankingChart();
+    createGPUChart();
 });
