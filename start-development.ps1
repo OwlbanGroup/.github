@@ -17,7 +17,7 @@ if (-not (Test-Path "node_modules")) {
 
 # Set development environment
 $env:NODE_ENV = "development"
-$env:PORT = $env:PORT ?? "3000"
+if (-not $env:PORT) { $env:PORT = "3000" }
 
 # Start the application
 Write-Host "🎯 Starting development server..." -ForegroundColor Blue

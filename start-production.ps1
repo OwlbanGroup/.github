@@ -73,7 +73,7 @@ if (-not (Test-Path "logs")) {
 
 # Set environment variables
 $env:NODE_ENV = "production"
-$env:PORT = $env:PORT ?? "3000"
+if (-not $env:PORT) { $env:PORT = "3000" }
 
 # Check MongoDB (optional)
 if (Test-Command mongod) {
@@ -103,7 +103,7 @@ Start-Sleep -Seconds 3
 
 # Check if started successfully
 try {
-    $pm2Status = pm2 describe ai-dashboard 2>$null
+    pm2 describe ai-dashboard 2>$null
     if ($LASTEXITCODE -eq 0) {
         Write-Host "✅ AI Dashboard started successfully!" -ForegroundColor Green
         Write-Host ""

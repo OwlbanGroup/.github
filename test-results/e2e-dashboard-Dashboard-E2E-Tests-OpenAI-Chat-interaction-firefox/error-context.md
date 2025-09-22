@@ -1,0 +1,102 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - banner [ref=e2]:
+    - heading "Owlban Group Dashboard" [level=1] [ref=e3]
+  - main [ref=e4]:
+    - heading "Global Operations KPIs" [level=2] [ref=e6]
+    - heading "Global Banking Metrics" [level=2] [ref=e9]
+    - generic [ref=e11]:
+      - heading "Open Source @ J.P. Morgan" [level=2] [ref=e12]
+      - heading "Welcome to Open Source @ J.P. Morgan Payments!" [level=3] [ref=e13]
+      - paragraph [ref=e14]: Here you will find JPMC open source projects that our developers have incubated and brought to the open source community.
+      - heading "What we do" [level=4] [ref=e15]
+      - list [ref=e16]:
+        - listitem [ref=e17]: JPMC has a long history of building successful open source projects, forging open standards, and contributing to the open source community at large.
+      - heading "How to contribute" [level=4] [ref=e18]
+      - list [ref=e19]:
+        - listitem [ref=e20]:
+          - text: Refer to our
+          - link "CONTRIBUTE.md" [ref=e21] [cursor=pointer]:
+            - /url: https://github.com/jpmorganchase/.github/blob/main/CONTRIBUTING.md
+          - text: for how to contribute
+      - heading "Follow us" [level=4] [ref=e22]
+      - list [ref=e23]:
+        - listitem [ref=e24]: Our GitHub hosts our current JPMC sponsored projects. We have an active pipeline of projects that we are bringing to the community.
+        - listitem [ref=e25]: Follow us to stay informed.
+      - heading "Technology @ J.P. Morgan Payments" [level=4] [ref=e26]
+      - paragraph [ref=e27]:
+        - link "https://developer.payments.jpmorgan.com/" [ref=e28] [cursor=pointer]:
+          - /url: https://developer.payments.jpmorgan.com/
+      - list [ref=e29]:
+        - listitem [ref=e30]: Secure your payments, facilitate capital transfers, manage your accounts, or find the answer to your unique challenge with flexible end-to-end solutions to address your evolving needs from J.P. Morgan Payments.
+      - heading "Global Technology Careers" [level=4] [ref=e31]
+      - paragraph [ref=e32]:
+        - link "Global Technology Careers" [ref=e33] [cursor=pointer]:
+          - /url: https://www.jpmorganchase.com/careers#tech-careers
+      - list [ref=e34]:
+        - listitem [ref=e35]:
+          - text: If you are passionate about open source, join us. Open positions in Global Technology are on our
+          - link "career site" [ref=e36] [cursor=pointer]:
+            - /url: https://www.jpmorganchase.com/careers#tech-careers
+      - paragraph [ref=e37]:
+        - strong [ref=e38]: Open Source @ JPMorgan Chase 2023
+    - generic [ref=e39]:
+      - heading "NVIDIA AI Control Panel" [level=2] [ref=e40]
+      - heading "GPU Metrics" [level=3] [ref=e42]
+      - generic [ref=e44]:
+        - heading "AI Inference" [level=3] [ref=e45]
+        - generic [ref=e46]:
+          - generic [ref=e47]: "Enter your query for the advanced AI model:"
+          - textbox "Enter your query for the advanced AI model:" [ref=e48]
+          - button "Run Inference" [active] [ref=e49]
+      - generic [ref=e51]:
+        - heading "Blackbox AI Inference (Grace Blackwell)" [level=3] [ref=e52]
+        - generic [ref=e53]:
+          - generic [ref=e54]: "Enter your query for the Blackbox AI model on NVIDIA Grace Blackwell:"
+          - textbox "Enter your query for the Blackbox AI model on NVIDIA Grace Blackwell:" [ref=e55]
+          - button "Run Blackbox Inference" [ref=e56]
+      - generic [ref=e58]:
+        - heading "AI Image Generation" [level=3] [ref=e59]
+        - generic [ref=e60]:
+          - generic [ref=e61]: "Describe the image you want to generate:"
+          - textbox "Describe the image you want to generate:" [ref=e62]
+          - button "Generate Image" [ref=e63]
+      - generic [ref=e65]:
+        - heading "AI Code Completion" [level=3] [ref=e66]
+        - generic [ref=e67]:
+          - generic [ref=e68]: "Enter code snippet to complete:"
+          - textbox "Enter code snippet to complete:" [ref=e69]
+          - button "Complete Code" [ref=e70]
+      - generic [ref=e72]:
+        - heading "AI Sentiment Analysis" [level=3] [ref=e73]
+        - generic [ref=e74]:
+          - generic [ref=e75]: "Enter text to analyze sentiment:"
+          - textbox "Enter text to analyze sentiment:" [ref=e76]
+          - button "Analyze Sentiment" [ref=e77]
+      - generic [ref=e79]:
+        - heading "Voice Input for AI" [level=3] [ref=e80]
+        - button "Start Voice Input" [ref=e81] [cursor=pointer]
+      - generic [ref=e84]:
+        - heading "Real-time AI Analytics" [level=3] [ref=e85]
+        - generic [ref=e87]: "Next prediction: 147"
+      - generic [ref=e88]:
+        - heading "OpenAI GPT-4 Chat" [level=3] [ref=e89]
+        - generic [ref=e90]:
+          - textbox "Ask GPT-4..." [ref=e91]: Hello GPT
+          - button "Send" [ref=e92]
+      - generic [ref=e93]:
+        - heading "OpenAI DALL-E Image Generation" [level=3] [ref=e94]
+        - generic [ref=e95]:
+          - textbox "Describe the image..." [ref=e96]
+          - button "Generate" [ref=e97]
+    - generic [ref=e98]:
+      - heading "Collaborative AI Sessions" [level=2] [ref=e99]
+      - textbox "Enter session ID" [ref=e100]
+      - button "Join/Create Session" [ref=e101]
+      - generic [ref=e102]:
+        - textbox "Share your AI prompt or idea..." [ref=e103]
+        - button "Share" [ref=e104]
+  - button "Toggle Dark Mode" [ref=e105]
+```
