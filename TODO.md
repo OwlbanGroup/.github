@@ -1,30 +1,30 @@
-# AI Dashboard Backend - Next Steps Implementation
+# API Debugging and Fixes
 
-## Critical Fixes (Priority 1)
-- [ ] Fix server startup order in app.js
-- [ ] Integrate error handling middleware
-- [ ] Add 404 handler
+## Issues to Fix:
+- [ ] Fix missing imports in app.js (logger, errorHandler)
+- [ ] Add missing /metrics endpoint
+- [ ] Create public endpoints for testing
+- [ ] Fix middleware setup
+- [ ] Add startup logging
 
-## Security Enhancements (Priority 2)
-- [ ] Add CORS configuration
-- [ ] Apply rate limiting to AI endpoints
-- [ ] Add request logging middleware
-- [ ] Apply input validation to all endpoints
+## Implementation Steps:
+1. **Fix app.js imports and setup**
+   - Import logger utility
+   - Import error handler middleware
+   - Fix any missing dependencies
 
-## Configuration Management (Priority 3)
-- [ ] Create centralized config management
-- [ ] Add environment variable validation
+2. **Add missing /metrics endpoint**
+   - Properly define Prometheus metrics route
 
-## Database Improvements (Priority 4)
-- [ ] Add database connection retry logic
-- [ ] Improve error handling for DB operations
+3. **Create public endpoints for testing**
+   - Add non-authenticated versions of key endpoints
+   - Add health check endpoint
 
-## API Documentation (Priority 5)
-- [ ] Add /api/docs endpoint
-- [ ] Integrate health check endpoints
+4. **Test the fixes**
+   - Verify endpoints respond correctly
+   - Test both authenticated and public endpoints
+   - Check metrics endpoint functionality
 
-## Testing Improvements (Priority 6)
-- [ ] Add comprehensive API endpoint tests
-- [ ] Test all changes thoroughly
-
-## Current Status: IN PROGRESS - Critical Fixes
+## Current Status:
+- ✅ Analysis completed
+- 🔄 Implementation in progress

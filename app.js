@@ -24,6 +24,10 @@ const {
   getVersionInfo
 } = require('./middleware/apiVersioning');
 
+// Import logger and error handler
+const { logger, logError, logInfo } = require('./logger');
+const { errorHandler, notFoundHandler } = require('./middleware/errorHandler');
+
 // OpenTelemetry Distributed Tracing Setup
 let tracer, span;
 try {
@@ -194,6 +198,82 @@ app.post('/api/auth/login', async (req, res) => {
 
 // Serve static files from the dashboard directory
 app.use(express.static('dashboard'));
+
+// Public endpoints for testing (no authentication required)
+app.get('/health', (req, res) => {
+    res.json({
+        status: 'healthy',
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime(),
+        version: '1.0.0'
+    });
+});
+
+app.get('/api/public/status', (req, res) => {
+    res.json({
+        status: 'API is running',
+        timestamp: new Date().toISOString(),
+        services: {
+            financial: 'available',
+            ai: 'available',
+            nvidia: 'available',
+            docker: 'available'
+        }
+    });
+});
+
+// Public financial data endpoint (limited data for testing)
+app.get('/api/public/financial/status', (req, res) => {
+    try {
+        const status = financialManager.getProviderStatus();
+        const rateLimitStatus = financialManager.getRateLimitStatus();
+
+        res.json({
+            providers: status,
+            rateLimits: rateLimitStatus,
+            summary: {
+                availableProviders: Object.values(status).filter(p => p.available).length,
+                totalProviders: Object.keys(status).length,
+                totalErrors: Object.values(status).reduce((sum, p) => sum + p.errorCount, 0)
+            },
+            timestamp: new Date().toISOString()
+        });
+    } catch (error) {
+        logError(error, req, 'Public financial status endpoint');
+        res.status(500).json({ error: 'Failed to fetch provider status', details: error.message });
+    }
+});
+
+// Public GPU metrics endpoint
+app.get('/api/public/gpu', (req, res) => {
+    exec('nvidia-smi --query-gpu=utilization.gpu,temperature.gpu,memory.used,memory.total --format=csv,noheader,nounits', (error, stdout, stderr) => {
+        if (error) {
+            logError(error, req, 'Public GPU metrics endpoint');
+            return res.status(500).json({ error: 'Failed to retrieve GPU metrics' });
+        }
+        if (stderr) {
+            console.error('nvidia-smi stderr:', stderr);
+        }
+
+        const lines = stdout.trim().split('\n');
+        if (lines.length === 0) {
+            return res.status(500).json({ error: 'No GPU data available' });
+        }
+
+        // Assume first GPU
+        const [utilization, temperature, memoryUsed, memoryTotal] = lines[0].split(',').map(s => parseFloat(s.trim()));
+
+        res.json({
+            utilization: utilization || 0,
+            temperature: temperature || 0,
+            memory: {
+                used: (memoryUsed || 0) * 1024 * 1024, // Convert MB to bytes
+                total: (memoryTotal || 0) * 1024 * 1024
+            },
+            timestamp: new Date().toISOString()
+        });
+    });
+});
 
 // Financial Data Endpoints
 
@@ -770,9 +850,13 @@ const httpRequestDuration = new promClient.Histogram({
 });
 register.registerMetric(httpRequestDuration);
 
+// Metrics endpoint
 app.get('/metrics', (req, res) => {
     res.set('Content-Type', register.contentType);
-    register.metrics().then(metrics => res.end(metrics));
+    register.metrics().then(metrics => res.end(metrics)).catch(error => {
+        logError(error, req, 'Metrics endpoint');
+        res.status(500).json({ error: 'Failed to retrieve metrics' });
+    });
 });
 
 // Docker integration
