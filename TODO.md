@@ -1,18 +1,11 @@
-# TODO: Enhance Coetus App with JPMorgan Project
+# TODO: Combine JPMorgan and NVIDIA Dashboard Control Panel into Owlban Group Project
 
-- [x] Update dashboard/index.html: Change title to "J.P. Morgan Global Operations and Global Banking Dashboard"
-- [x] Update dashboard/index.html: Add senatus_logo.png as logo in header
-- [x] Update dashboard/index.html: Add new section with welcome message from profile/readme.md
-- [x] Update dashboard/styles.css: Change header background color to JPMC color (e.g., #005eb8)
-- [x] Update dashboard/styles.css: Adjust h2 color to match
-- [ ] Test: Open index.html in browser to verify enhancements
-
-# TODO: Create Endpoints for Dynamic Dashboard
-
-- [x] Create app.js: Set up Node.js Express server
-- [x] Create /api/operations endpoint: Return JSON data for operations chart
-- [x] Create /api/banking endpoint: Return JSON data for banking chart
-- [x] Update dashboard/script.js: Fetch data from endpoints and update charts
-- [x] Install dependencies: Run npm init and npm install express
-- [x] Run server: Start the Express server
-- [ ] Test: Open dashboard in browser to verify dynamic data loading
+- [ ] Copy nvidia.js from FOUR-ERA-AI to the current project
+- [ ] Update dashboard/index.html: Add script tag for nvidia.js
+- [ ] Update dashboard/index.html: Add new section for NVIDIA GPU metrics
+- [ ] Update dashboard/script.js: Import nvidiaIntegration and add function to create GPU chart
+- [ ] Update dashboard/styles.css: Adjust styles for new section if needed
+- [ ] Update package.json: Add any necessary dependencies (none for now)
+- [ ] Update app.js: Ensure static serving includes nvidia.js if placed in dashboard
+- [ ] Test: Run server and verify GPU metrics display in browser
+- [ ] Update title to "Owlban Group Dashboard" or similar
