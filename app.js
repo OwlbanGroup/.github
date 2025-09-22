@@ -389,6 +389,61 @@ app.post('/api/kubernetes/deploy', authenticateToken, express.json(), async (req
     }
 });
 
+// RAG (Retrieval-Augmented Generation) Implementation
+const knowledgeBase = [
+    "JPMorgan Chase is a leading global financial services firm.",
+    "NVIDIA provides advanced GPU technology for AI and computing.",
+    "AI is transforming industries through machine learning and deep learning.",
+    "The dashboard integrates multiple AI platforms for comprehensive analysis."
+];
+
+app.post('/api/ai/rag-query', authenticateToken, express.json(), async (req, res) => {
+    try {
+        const { query } = req.body;
+
+        // Simple semantic search (in production, use vector database like Pinecone)
+        const relevantDocs = knowledgeBase.filter(doc =>
+            doc.toLowerCase().includes(query.toLowerCase())
+        );
+
+        const context = relevantDocs.join(' ');
+
+        // Use OpenAI to generate response with retrieved context
+        const completion = await openai.chat.completions.create({
+            model: 'gpt-4',
+            messages: [
+                { role: 'system', content: `Use this context to answer: ${context}` },
+                { role: 'user', content: query }
+            ]
+        });
+
+        res.json({
+            response: completion.choices[0].message.content,
+            sources: relevantDocs
+        });
+    } catch (error) {
+        res.status(500).json({ error: 'RAG query failed' });
+    }
+});
+
+// Fine-tuning endpoint (placeholder for custom model training)
+app.post('/api/ai/fine-tune', authenticateToken, express.json(), async (req, res) => {
+    try {
+        const { trainingData, modelType } = req.body;
+
+        // In production, this would integrate with OpenAI fine-tuning API
+        // For now, return mock response
+        res.json({
+            jobId: `ft-${Date.now()}`,
+            status: 'training',
+            estimatedCompletion: '2 hours',
+            message: `Fine-tuning ${modelType} model with ${trainingData.length} examples`
+        });
+    } catch (error) {
+        res.status(500).json({ error: 'Fine-tuning failed' });
+    }
+});
+
 // WebSocket for real-time collaboration
 io.on('connection', (socket) => {
     console.log('User connected:', socket.id);
