@@ -15,7 +15,7 @@
     "mongoose": "^8.0.3",
     "socket.io": "^4.7.4",
     "@google-cloud/aiplatform": "^3.15.0",
-    "@azure/openai": "^1.0.0-beta.11",
+
     "helmet": "^7.1.0",
     "express-rate-limit": "^7.1.5",
     "redis": "^4.6.11",
@@ -23,7 +23,6 @@
     "i18next-browser-languagedetector": "^7.2.0",
     "aws-sdk": "^2.1548.0",
     "prom-client": "^15.1.0",
-    "dockerode": "^4.0.2",
-    "kubernetes-client": "^9.0.0"
+    "dockerode": "^4.0.2"
   }
 }

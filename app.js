@@ -12,11 +12,11 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const { createClient } = require('redis');
 const { PredictionServiceClient } = require('@google-cloud/aiplatform');
-const { AzureOpenAI } = require('@azure/openai');
+// Removed AzureOpenAI import, using OpenAI with Azure config
 const AWS = require('aws-sdk');
 const promClient = require('prom-client');
 const Docker = require('dockerode');
-const k8s = require('kubernetes-client');
+
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
@@ -78,11 +78,12 @@ redisClient.connect();
 // Google Cloud AI Platform
 const predictionServiceClient = new PredictionServiceClient();
 
-// Azure OpenAI
-const azureOpenai = new AzureOpenAI({
-    endpoint: process.env.AZURE_OPENAI_ENDPOINT || 'YOUR_AZURE_ENDPOINT',
+// Azure OpenAI (using OpenAI SDK with Azure config)
+const azureOpenai = new OpenAI({
     apiKey: process.env.AZURE_OPENAI_API_KEY || 'YOUR_AZURE_API_KEY',
-    apiVersion: '2023-12-01-preview'
+    baseURL: `${process.env.AZURE_OPENAI_ENDPOINT || 'YOUR_AZURE_ENDPOINT'}/openai/deployments/gpt-4`,
+    defaultQuery: { 'api-version': '2023-12-01-preview' },
+    defaultHeaders: { 'api-key': process.env.AZURE_OPENAI_API_KEY || 'YOUR_AZURE_API_KEY' },
 });
 
 // JWT Secret
@@ -374,7 +375,9 @@ app.post('/api/docker/containers', authenticateToken, express.json(), async (req
     }
 });
 
-// Kubernetes integration
+// Kubernetes integration (commented out due to version compatibility issues)
+// Uncomment and configure when you have a proper Kubernetes cluster setup
+/*
 const kubeconfig = new k8s.KubeConfig();
 kubeconfig.loadFromDefault();
 const k8sApi = kubeconfig.makeApiClient(k8s.CoreV1Api);
@@ -388,6 +391,7 @@ app.post('/api/kubernetes/deploy', authenticateToken, express.json(), async (req
         res.status(500).json({ error: 'Kubernetes deployment failed' });
     }
 });
+*/
 
 // RAG (Retrieval-Augmented Generation) Implementation
 const knowledgeBase = [
