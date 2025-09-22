@@ -13,7 +13,6 @@ $APP_NAME = "owlban-ai-dashboard"
 $LOG_DIR = "logs"
 $BACKUP_DIR = "backups"
 $HEALTH_CHECK_URL = "http://localhost:3000/api/operations"
-$MAX_STARTUP_TIME = 60
 $REQUIRED_NODE_VERSION = 18
 
 # Colors for output
