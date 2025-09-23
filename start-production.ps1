@@ -126,7 +126,7 @@ function Test-DatabaseConnectivity {
 
     # Check MongoDB connectivity
     try {
-        $exitCode = & mongosh --eval "db.runCommand({ping: 1})" 2>$null
+        & mongosh --eval "db.runCommand({ping: 1})" 2>$null
         if ($LASTEXITCODE -eq 0) {
             Write-Status "MongoDB connectivity check passed" "SUCCESS"
         } else {
@@ -271,23 +271,23 @@ function Set-Monitoring {
 function Show-StartupInfo {
     Write-Status "AI Dashboard started successfully!" "SUCCESS"
     Write-Host ""
-    Write-Host "📊 Application Information:" -ForegroundColor Cyan
+    Write-Host "Application Information:" -ForegroundColor Cyan
     Write-Host "   - Environment: $env:NODE_ENV"
     Write-Host "   - Port: $([Environment]::GetEnvironmentVariable('PORT'))"
     Write-Host "   - Health Check: http://localhost:$([Environment]::GetEnvironmentVariable('PORT'))/health"
     Write-Host "   - Metrics: http://localhost:$([Environment]::GetEnvironmentVariable('PORT'))/metrics"
     Write-Host ""
-    Write-Host "📝 Log Files:" -ForegroundColor Cyan
+    Write-Host "Log Files:" -ForegroundColor Cyan
     Write-Host "   - Application logs: ./logs/app.log"
     Write-Host "   - Error logs: ./logs/error.log"
     Write-Host ""
-    Write-Host "🔧 Useful Commands:" -ForegroundColor Cyan
+    Write-Host "Useful Commands:" -ForegroundColor Cyan
     Write-Host "   - View logs: Get-Content logs/app.log -Tail 20 -Wait"
     Write-Host "   - Restart app: pm2 restart ai-dashboard (if using PM2)"
     Write-Host "   - Stop app: pm2 stop ai-dashboard (if using PM2)"
     Write-Host "   - Check status: pm2 status (if using PM2)"
     Write-Host ""
-    Write-Host "⚠️  Important Notes:" -ForegroundColor Yellow
+    Write-Host "Important Notes:" -ForegroundColor Yellow
     Write-Host "   - Ensure all API keys are properly configured"
     Write-Host "   - Monitor disk space and log file sizes"
     Write-Host "   - Set up proper firewall rules"
