@@ -1168,8 +1168,7 @@ async function getMarketNews(categories) {
     ];
 }
 
-// Error handling middleware
-const errorHandler = require('./middleware/errorHandler');
+
 
 // Apply error handling middleware (must be last)
 app.use(errorHandler);
