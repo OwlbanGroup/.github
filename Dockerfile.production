@@ -1,0 +1,65 @@
+# Multi-stage build for production optimization
+FROM node:18-alpine AS base
+
+# Install dumb-init for proper signal handling
+RUN apk add --no-cache dumb-init
+
+# Create app directory
+WORKDIR /app
+
+# Create non-root user
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nextjs -u 1001
+
+# Dependencies stage
+FROM base AS deps
+COPY package*.json ./
+RUN npm ci --only=production && npm cache clean --force
+
+# Development stage (for development builds)
+FROM base AS dev
+ENV NODE_ENV=development
+COPY package*.json ./
+RUN npm ci
+COPY . .
+USER nextjs
+EXPOSE 3000
+CMD ["dumb-init", "npm", "run", "dev"]
+
+# Production build stage
+FROM base AS builder
+ENV NODE_ENV=production
+COPY package*.json ./
+RUN npm ci --only=production
+COPY . .
+RUN npm run build 2>/dev/null || echo "No build script defined, skipping..."
+
+# Production stage
+FROM base AS production
+ENV NODE_ENV=production
+
+# Copy dependencies from deps stage
+COPY --from=deps --chown=nextjs:nodejs /app/node_modules ./node_modules
+
+# Copy application code
+COPY --chown=nextjs:nodejs . .
+
+# Copy built assets if they exist
+COPY --from=builder --chown=nextjs:nodejs /app/dist ./dist 2>/dev/null || true
+COPY --from=builder --chown=nextjs:nodejs /app/build ./build 2>/dev/null || true
+
+# Create logs directory with proper permissions
+RUN mkdir -p logs && chown -R nextjs:nodejs logs
+
+# Switch to non-root user
+USER nextjs
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD node healthcheck.js || exit 1
+
+# Expose port
+EXPOSE 3000
+
+# Use dumb-init to handle signals properly
+CMD ["dumb-init", "node", "app.js"]

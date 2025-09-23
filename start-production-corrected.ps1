@@ -126,7 +126,7 @@ function Test-DatabaseConnectivity {
 
     # Check MongoDB connectivity
     try {
-        $exitCode = & mongosh --eval "db.runCommand({ping: 1})" 2>$null
+        & mongosh --eval "db.runCommand({ping: 1})" 2>$null
         if ($LASTEXITCODE -eq 0) {
             Write-Status "MongoDB connectivity check passed" "SUCCESS"
         } else {
